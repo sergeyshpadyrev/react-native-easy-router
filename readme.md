@@ -8,6 +8,36 @@ npm install --save react-native-router-flux
 
 ## Usage
 
+```javascript
+import React from 'react'
+import Router from 'react-native-easy-router'
+import { SafeAreaView, Text, View } from 'react-native'
+
+const First = ({ router }) => (
+  <View style={{ backgroundColor: 'red', flex: 1 }}>
+    <Text>First screen</Text>
+    <Text onPress={() => router.push.second({ name: 'John' })}>Go forward</Text>
+  </View>
+)
+
+const Second = ({ router, name }) => (
+  <View style={{ backgroundColor: 'blue', flex: 1 }}>
+    <Text>Second screen</Text>
+    <Text>Hello {name}!</Text>
+    <Text onPress={() => router.pop()}>Go back</Text>
+  </View>
+)
+
+const routes = { first: First, second: Second }
+const App = () => (
+  <SafeAreaView style={{ flex: 1 }}>
+    <Router routes={routes} initialRoute="first" />
+  </SafeAreaView>
+)
+
+export default App
+```
+
 ## API
 
 #### Router properties
