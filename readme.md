@@ -35,6 +35,8 @@ const App = () => (
   </SafeAreaView>
 )
 
+You can see more usage examples in [example](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/master/example) directory
+
 export default App
 ```
 
