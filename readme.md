@@ -18,7 +18,11 @@ npm install --save react-native-router-flux
 | initialRoute | string   | required | initial route name                   |
 | routerRef    | function |          | function to get router object        |
 
-Example: `<Router routes={{ first: First, second: Second }} initialRoute="first" routerRef={ref => (this.router = ref)} />`
+```
+// Example
+
+<Router routes={{ first: First, second: Second }} initialRoute="first" routerRef={ref => (this.router = ref)} />
+```
 
 #### Router functions
 
@@ -33,9 +37,9 @@ Router object can be found in route component parameters or can be got from `rou
 
 All functions return promises. Promise resolves when action finishes
 
-Example:
-
 ```
+// Example
+
 router.pop({type:'top'}).then(() => console.log('Popped')
 router.push.first({value:123}, {type:'top'}).then(() => console.log('Pushed'))
 router.replace.second({value:123}, {type:'top'}).then(() => console.log('Replaced'))
@@ -50,9 +54,9 @@ router.replace.second({value:123}, {type:'top'}).then(() => console.log('Replace
 | params    | object   | Parameters passed to screen            |
 | pop       | function | Function to pop all screens until this |
 
-Example:
-
 ```
+// Example
+
 console.log(router.stack[0].id) // 0
 console.log(router.stack[0].route) // 'first'
 console.log(router.stack[0].params) // {}
@@ -70,4 +74,8 @@ router.stack[0].pop({type:'bottom'}).then(() => console.log('Popped to route'))
 
 When you set animation type to `null` no animation is shown
 
-Example: `{type: 'bottom', duration: 500, easing:'ease-in-out'}`
+```
+// Example
+
+router.pop({type: 'bottom', duration: 500, easing:'ease-in-out'})
+```
