@@ -10,25 +10,25 @@ class Router extends React.Component {
   screens = []
   state = { stack: [] }
 
+  allRoutesAction = type =>
+    mapByKey(this.props.routes, route => (params, animation) => this.addAction({ type, route, params }, animation))
+
   router = {
     pop: animation => this.addAction({ type: 'pop' }, animation),
-    push: mapByKey(this.props.routes, route => (params, animation) =>
-      this.addAction({ type: 'push', route, params }, animation)
-    ),
-    replace: mapByKey(this.props.routes, route => (params, animation) =>
-      this.addAction({ type: 'replace', route, params }, animation)
-    )
+    push: this.allRoutesAction('push'),
+    replace: this.allRoutesAction('replace'),
+    reset: this.allRoutesAction('reset')
   }
 
   addScreen = (route, params, animation, onActionFinished = this.onActionFinished, idShift = 0) => {
-    const id = this.state.stack.length - idShift
+    const id = this.screens.length - idShift
     const pop = animation => this.addAction({ type: 'popTo', id }, animation)
     const details = { id, route, params: { ...params }, pop }
     const Route = this.props.routes[route]
     const screen = (
       <Screen
         animation={animation}
-        key={`${id}-${route}`}
+        key={`${id}-${route}-${parseInt(Math.random() * 10000)}`}
         removeScreen={this.state.stack.length > 0 ? this.removeScreen : undefined}
         registerScreen={methods => (this.screens = [...this.screens, { ...methods, details }])}
         route={<Route router={this.router} {...params} />}
@@ -86,6 +86,16 @@ class Router extends React.Component {
           })
         }
         return this.addScreen(action.route, action.params, action.animation, removeReplacedScreen, 1)
+      case 'reset':
+        const removeAllScreens = () => {
+          const cut = array => [array[array.length - 1]]
+          this.screens = cut(this.screens)
+          this.setState({ stack: cut(this.state.stack) }, () => {
+            action.resolve()
+            this.onActionFinished()
+          })
+        }
+        return this.addScreen(action.route, action.params, action.animation, removeAllScreens, this.screens.length)
     }
   }
 
