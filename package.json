@@ -1,0 +1,14 @@
+{
+  "name": "react-native-easy-router",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "dependencies": {
+    "react-native-animatable": "^1.3.0"
+  },
+  "repository": { "type": "git", "url": "git+https://github.com/sergeyshpadyrev/react-native-easy-router.git" },
+  "keywords": ["react", "react-native", "router"],
+  "author": "Sergey Shpadyrev",
+  "license": "MIT",
+  "bugs": { "url": "https://github.com/sergeyshpadyrev/react-native-easy-router/issues" },
+  "homepage": "https://github.com/sergeyshpadyrev/react-native-easy-router#readme"
+}
