@@ -65,6 +65,7 @@ Router object can be found in route component parameters or can be got from `rou
 | pop      | function(animation)                         | Pops the last screen                                              |
 | push     | object{key:function(parameters, animation)} | Object of functions to push new screen keyed by route name        |
 | replace  | object{key:function(parameters, animation)} | Object of functions to replace current screen keyed by route name |
+| reset    | object{key:function(parameters, animation)} | Object of functions to reset the whole stack keyed by route name  |
 | stack    | array                                       | List of routes in stack                                           |
 
 All functions return promises. Promise resolves when action finishes
@@ -75,6 +76,7 @@ All functions return promises. Promise resolves when action finishes
 router.pop({type:'top'}).then(() => console.log('Popped')
 router.push.first({value:123}, {type:'top'}).then(() => console.log('Pushed'))
 router.replace.second({value:123}, {type:'top'}).then(() => console.log('Replaced'))
+router.reset.first({value:123}, {type:'top'}).then(() => console.log('Reset'))
 ```
 
 #### Router stack element

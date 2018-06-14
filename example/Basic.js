@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, Text } from 'react-native'
+import { SafeAreaView, Text, View } from 'react-native'
 
 import Router from './src'
 
@@ -9,11 +9,11 @@ const Button = ({ color, onPress, title }) => (
   </Text>
 )
 const Screen = ({ children, color }) => (
-  <SafeAreaView
+  <View
     style={{ alignItems: 'center', backgroundColor: color, display: 'flex', flex: 1, justifyContent: 'space-around' }}
   >
     {children}
-  </SafeAreaView>
+  </View>
 )
 
 const First = ({ router }) => (
@@ -84,6 +84,10 @@ const Fifth = ({ router }) => (
 )
 
 const routes = { first: First, second: Second, third: Third, fourth: Fourth, fifth: Fifth }
-const App = () => <Router routes={routes} initialRoute="first" />
+const App = () => (
+  <SafeAreaView style={{ flex: 1 }}>
+    <Router routes={routes} initialRoute="first" />
+  </SafeAreaView>
+)
 
 export default App
