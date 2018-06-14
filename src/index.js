@@ -101,7 +101,7 @@ class Router extends React.Component {
       }.bind(this)
     })
 
-    this.props.routerRef(this.router)
+    if (this.props.routerRef) this.props.routerRef(this.router)
     this.addScreen(this.props.initialRoute, {}, {})
   }
 
