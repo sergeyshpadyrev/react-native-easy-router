@@ -105,7 +105,7 @@ class Router extends React.Component {
     this.addScreen(this.props.initialRoute, {}, {})
   }
 
-  render = () => this.state.stack
+  render = () => <View style={{ flex: 1 }}>{this.state.stack}</View>
 }
 
 export default Router
