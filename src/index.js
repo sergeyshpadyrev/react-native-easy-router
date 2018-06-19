@@ -1,5 +1,5 @@
+import { BackHandler, View } from 'react-native'
 import React from 'react'
-import { View } from 'react-native'
 
 import { mapByKey, prepareAnimation } from './util'
 import Screen from './Screen'
@@ -104,6 +104,13 @@ class Router extends React.Component {
     this.startAction()
   }
 
+  onHardwareBackPressed = () => {
+    if (this.router.stack.length > 1) {
+      this.router.pop()
+      return true
+    }
+  }
+
   componentWillMount = () => {
     Object.defineProperty(this.router, 'stack', {
       get: function() {
@@ -113,6 +120,12 @@ class Router extends React.Component {
 
     if (this.props.routerRef) this.props.routerRef(this.router)
     this.addScreen(this.props.initialRoute, {}, {})
+
+    BackHandler.addEventListener('hardwareBackPress', this.onHardwareBackPressed)
+  }
+
+  componentWillUnmount = () => {
+    BackHandler.removeEventListener('hardwareBackPress', this.onHardwareBackPressed)
   }
 
   render = () => <View style={{ flex: 1 }}>{this.state.stack}</View>
