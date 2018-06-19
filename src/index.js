@@ -105,10 +105,8 @@ class Router extends React.Component {
   }
 
   onHardwareBackPressed = () => {
-    if (this.router.stack.length > 1) {
-      this.router.pop()
-      return true
-    }
+    if (this.router.stack.length > 1) this.router.pop()
+    return true
   }
 
   componentWillMount = () => {
