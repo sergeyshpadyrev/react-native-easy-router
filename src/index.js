@@ -119,11 +119,15 @@ class Router extends React.Component {
     if (this.props.routerRef) this.props.routerRef(this.router)
     this.addScreen(this.props.initialRoute, {}, {})
 
-    BackHandler.addEventListener('hardwareBackPress', this.onHardwareBackPressed)
+    if (!this.props.disableHardwareBack) {
+      BackHandler.addEventListener('hardwareBackPress', this.onHardwareBackPressed)
+    }
   }
 
   componentWillUnmount = () => {
-    BackHandler.removeEventListener('hardwareBackPress', this.onHardwareBackPressed)
+    if (!this.props.disableHardwareBack) {
+      BackHandler.removeEventListener('hardwareBackPress', this.onHardwareBackPressed)
+    }
   }
 
   render = () => <View style={{ flex: 1 }}>{this.state.stack}</View>

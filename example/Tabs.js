@@ -77,7 +77,12 @@ class App extends React.Component {
   render = () => (
     <SafeAreaView style={{ flex: 1 }}>
       <Tabs active={this.state.active} changeTab={this.changeTab} tabs={tabs}>
-        <Router routes={routes} initialRoute="first" routerRef={ref => (this.router = ref)} />
+        <Router
+          routes={routes}
+          initialRoute="first"
+          routerRef={ref => (this.router = ref)}
+          disableHardwareBack={true}
+        />
       </Tabs>
     </SafeAreaView>
   )
