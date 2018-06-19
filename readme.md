@@ -44,16 +44,22 @@ export default App
 
 #### Router properties
 
-| Property     | Type     | Required | Description                          |
-| ------------ | -------- | -------- | ------------------------------------ |
-| routes       | object   | required | route components keyed by route name |
-| initialRoute | string   | required | initial route name                   |
-| routerRef    | function |          | function to get router object        |
+| Property            | Type     | Required | Description                                          |
+| ------------------- | -------- | -------- | ---------------------------------------------------- |
+| routes              | object   | required | route components keyed by route name                 |
+| initialRoute        | string   | required | initial route name                                   |
+| routerRef           | function |          | function to get router object                        |
+| disableHardwareBack | boolean  |          | don't use Android back button to pop (default false) |
 
 ```javascript
 // Example
 
-<Router routes={{ first: First, second: Second }} initialRoute="first" routerRef={ref => (this.router = ref)} />
+<Router
+  routes={{ first: First, second: Second }}
+  initialRoute="first"
+  routerRef={ref => (this.router = ref)}
+  disableHardwareBack={false}
+/>
 ```
 
 #### Router functions
