@@ -1,7 +1,6 @@
 import React from 'react'
+import Router from 'react-native-easy-router'
 import { SafeAreaView, Text, View } from 'react-native'
-
-import Router from './src'
 
 const Button = ({ color, onPress, title }) => (
   <Text onPress={onPress} style={{ backgroundColor: color, fontSize: 25 }}>
@@ -51,14 +50,7 @@ const Second = ({ router, sentValue }) => (
 const Third = ({ router }) => (
   <Screen color="blue">
     <Button color="green" onPress={() => router.pop({ type: 'bottom' })} title="Back To Second" />
-    <Button
-      color="red"
-      onPress={() => {
-        router.pop({ type: 'bottom' })
-        router.pop({ type: 'right' })
-      }}
-      title="Double Back To First"
-    />
+    <Button color="red" onPress={() => router.reset.first()} title="Reset To First" />
     <Button
       color="red"
       onPress={() => router.stack[0].pop().then(() => console.log('PopTo End'))}
