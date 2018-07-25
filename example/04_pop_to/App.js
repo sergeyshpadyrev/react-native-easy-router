@@ -1,6 +1,6 @@
 import React from 'react'
 import Router from 'react-native-easy-router'
-import { Text, View } from 'react-native'
+import { Text, TextInput, View } from 'react-native'
 
 const Screen = ({ children, color }) => (
   <View
@@ -25,8 +25,14 @@ const Screen1 = ({ router }) => (
 
 const Screen2 = ({ router }) => (
   <Screen color="pink">
-    <Text onPress={() => router.pop()}>Go back to screen 1 {/* Stack will be [Screen1] */}</Text>
+    <Text onPress={() => router.push.Screen3()}>Go to screen 3 {/* Stack will be [Screen1, Screen2, Screen3] */}</Text>
   </Screen>
 )
 
-export default () => <Router routes={{ Screen1, Screen2 }} initialRoute="Screen1" />
+const Screen3 = ({ router }) => (
+  <Screen color="yellow">
+    <Text onPress={() => router.stack[0].pop()}>Go back to screen 1 {/* Stack will be [Screen1] */}</Text>
+  </Screen>
+)
+
+export default () => <Router routes={{ Screen1, Screen2, Screen3 }} initialRoute="Screen1" />
