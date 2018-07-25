@@ -48,7 +48,7 @@ export default App
 | ------------------- | -------- | -------- | ---------------------------------------------------- |
 | routes              | object   | required | route components keyed by route name                 |
 | initialRoute        | string   | required | initial route name                                   |
-| routerRef           | function |          | function to get router object                        |
+| router              | function |          | function to get router object                        |
 | disableHardwareBack | boolean  |          | don't use Android back button to pop (default false) |
 
 ```javascript
@@ -57,7 +57,7 @@ export default App
 <Router
   routes={{ first: First, second: Second }}
   initialRoute="first"
-  routerRef={ref => (this.router = ref)}
+  router={router => (this.router = router)}
   disableHardwareBack={false}
 />
 ```
