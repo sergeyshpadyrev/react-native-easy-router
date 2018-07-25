@@ -1,8 +1,8 @@
 import Actions from './actions'
+import * as Animatable from 'react-native-animatable-promise'
 import Animation from './animation'
 import Hardware from './hardware'
 import React from 'react'
-import Screen from './screen'
 import styles from './styles'
 import { View } from 'react-native'
 
@@ -15,7 +15,7 @@ class Router extends React.Component {
     pop: animation =>
       this.actions.add(onFinish => {
         if (this.state.stack.length > 0)
-          this.state.stack[this.state.stack.length - 1].screen.remove(animation, onFinish)
+          this.state.stack[this.state.stack.length - 1].reference.remove(animation, onFinish)
       }),
     push: this.forAllRoutes(route => (params, animation) =>
       this.actions.add(onFinish => this.addScreen(route, params, animation, onFinish))
@@ -42,33 +42,47 @@ class Router extends React.Component {
   hardware = new Hardware(this.router, this.props.disableHardwareBack)
 
   addScreen = (route, params, animation, onActionFinished, idShift = 0) => {
+    animation = Animation.withDefault(animation)
+
     const index = this.state.stack.length - idShift
     const key = `${index}-${route}-${parseInt(Math.random() * 10000)}`
+    const pop = animation => {
+      animation = Animation.withDefault(animation)
+      this.actions.add(onFinish => {
+        const cut = array => [...array.slice(0, index + 1), array[array.length - 1]]
+        const pop = () =>
+          this.state.stack[this.state.stack.length - 1].reference
+            .transitionTo(Animation.start(animation.type), animation.duration, animation.easing)
+            .then(onFinish)
+        return this.setState({ stack: cut(this.state.stack) }, pop)
+      })
+    }
+    const settings = { route, params: { ...params }, pop }
 
     const Route = this.props.routes[route]
+
     const screen = (
-      <Screen
-        animation={Animation.withDefault(animation)}
+      <Animatable.View
         key={key}
-        removeScreen={resolve => this.setState({ stack: this.state.stack.slice(0, -1) }, resolve)}
-        registerScreen={remove => {
-          const pop = animation =>
-            this.actions.add(onFinish => {
-              const cut = array => [...array.slice(0, index + 1), array[array.length - 1]]
-              const pop = () => this.state.stack[this.state.stack.length - 1].screen.remove(animation, onFinish)
-              return this.setState({ stack: cut(this.state.stack) }, pop)
-            })
-          const details = { route, params: { ...params }, pop }
-          this.setState({
-            stack: [
-              ...this.state.stack.slice(0, -1),
-              { ...this.state.stack[this.state.stack.length - 1], screen: { remove, details } }
-            ]
-          })
+        style={{ ...styles.screen, ...Animation.start(animation.type) }}
+        ref={reference => {
+          if (!!reference)
+            this.setState(
+              {
+                stack: [
+                  ...this.state.stack.slice(0, -1),
+                  { ...this.state.stack[this.state.stack.length - 1], settings, reference }
+                ]
+              },
+              () =>
+                reference
+                  .transitionTo(Animation.end(animation.type), animation.duration, animation.easing)
+                  .then(onActionFinished)
+            )
         }}
-        route={<Route router={this.router} {...params} />}
-        onActionFinished={onActionFinished}
-      />
+      >
+        <Route router={this.router} {...params} />
+      </Animatable.View>
     )
     this.setState({ stack: [...this.state.stack, screen] })
   }
@@ -76,7 +90,7 @@ class Router extends React.Component {
   componentWillMount = () => {
     Object.defineProperty(this.router, 'stack', {
       get: function() {
-        return this.state.stack.map(route => route.screen.details)
+        return this.state.stack.map(route => route.settings)
       }.bind(this)
     })
 
