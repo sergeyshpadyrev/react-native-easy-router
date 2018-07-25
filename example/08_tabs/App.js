@@ -59,7 +59,7 @@ export default class TabsExample extends React.Component {
           ))}
         </View>
       </View>
-      <Router routes={{ Screen1, Screen2, Screen3 }} initialRoute="Screen1" routerRef={ref => (this.router = ref)} />
+      <Router routes={{ Screen1, Screen2, Screen3 }} initialRoute="Screen1" router={ref => (this.router = ref)} />
     </View>
   )
 }

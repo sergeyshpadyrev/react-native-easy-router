@@ -88,16 +88,13 @@ class Router extends React.Component {
   }
 
   componentWillMount = () => {
-    Object.defineProperty(this.router, 'stack', {
-      get: function() {
-        return this.state.stack.map(route => route.settings)
-      }.bind(this)
-    })
-
-    if (this.props.routerRef) this.props.routerRef(this.router)
+    const stackGetter = { get: () => this.state.stack.map(route => route.settings) }
+    Object.defineProperty(this.router, 'stack', stackGetter)
 
     this.addScreen(this.props.initialRoute, {}, { type: 'none' })
     this.hardware.subscribe()
+
+    if (this.props.router) this.props.router(this.router)
   }
 
   componentWillUnmount = () => this.hardware.unsubscribe()
