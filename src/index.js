@@ -1,8 +1,9 @@
-import { BackHandler, View } from 'react-native'
-import React from 'react'
-
+import Hardware from './hardware'
 import { mapByKey, prepareAnimation } from './util'
-import Screen from './Screen'
+import React from 'react'
+import Screen from './screen'
+import styles from './styles'
+import { View } from 'react-native'
 
 class Router extends React.Component {
   actions = []
@@ -19,6 +20,7 @@ class Router extends React.Component {
     replace: this.allRoutesAction('replace'),
     reset: this.allRoutesAction('reset')
   }
+  hardware = new Hardware(this.router, this.props.disableHardwareBack)
 
   addScreen = (route, params, animation, onActionFinished = this.onActionFinished, idShift = 0) => {
     const id = this.screens.length - idShift
@@ -117,20 +119,16 @@ class Router extends React.Component {
     })
 
     if (this.props.routerRef) this.props.routerRef(this.router)
-    this.addScreen(this.props.initialRoute, {}, {})
+    this.addScreen(this.props.initialRoute, {}, { type: 'none' })
 
-    if (!this.props.disableHardwareBack) {
-      BackHandler.addEventListener('hardwareBackPress', this.onHardwareBackPressed)
-    }
+    this.hardware.subscribe()
   }
 
   componentWillUnmount = () => {
-    if (!this.props.disableHardwareBack) {
-      BackHandler.removeEventListener('hardwareBackPress', this.onHardwareBackPressed)
-    }
+    this.hardware.unsubscribe()
   }
 
-  render = () => <View style={{ flex: 1 }}>{this.state.stack}</View>
+  render = () => <View style={styles.router}>{this.state.stack}</View>
 }
 
 export default Router

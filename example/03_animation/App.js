@@ -22,7 +22,7 @@ const goBack = 'Go back to screen 1 with'
 
 const Screen1 = ({ router }) => (
   <Screen color="white">
-    <Text onPress={() => router.push.Screen2({}, { type: null })}>{goTo} no animation</Text>
+    <Text onPress={() => router.push.Screen2({}, { type: 'none' })}>{goTo} no animation</Text>
     <Text onPress={() => router.push.Screen2()}>{goTo} default animation</Text>
     <Text onPress={() => router.push.Screen2({}, { type: 'left' })}>{goTo} left animation</Text>
     <Text onPress={() => router.push.Screen2({}, { type: 'right' })}>{goTo} right animation</Text>
@@ -33,7 +33,7 @@ const Screen1 = ({ router }) => (
 
 const Screen2 = ({ router }) => (
   <Screen color="pink">
-    <Text onPress={() => router.pop({ type: null })}>{goBack} no animation</Text>
+    <Text onPress={() => router.pop({ type: 'none' })}>{goBack} no animation</Text>
     <Text onPress={() => router.pop()}>{goBack} default animation</Text>
     <Text onPress={() => router.pop({ type: 'left' })}>{goBack} left animation</Text>
     <Text onPress={() => router.pop({ type: 'right' })}>{goBack} right animation</Text>
