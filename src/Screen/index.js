@@ -14,7 +14,7 @@ class Screen extends React.Component {
   }
 
   remove = ({ type, duration, easing }, resolveRemoving) => {
-    if (!type) return this.props.removeScreen(resolve)
+    if (!type) return this.props.removeScreen(resolveRemoving)
     this.setState({ removing: true, resolveRemoving }, () =>
       this.view.transitionTo(animator(type).start, duration, easing)
     )
