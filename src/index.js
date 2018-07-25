@@ -14,7 +14,6 @@ class Router extends React.Component {
   router = {
     pop: animation =>
       this.actions.add(onFinish => {
-        console.log(JSON.stringify(this.state.stack.screen))
         if (this.state.stack.length > 0)
           this.state.stack[this.state.stack.length - 1].screen.remove(animation, onFinish)
       }),
