@@ -42,25 +42,27 @@ class Router extends React.Component {
   hardware = new Hardware(this.router, this.props.disableHardwareBack)
 
   addScreen = (route, params, animation, onActionFinished, idShift = 0) => {
-    const id = this.state.stack.length - idShift
-    const pop = animation =>
-      this.actions.add(onFinish => {
-        const cut = array => [...array.slice(0, id + 1), array[array.length - 1]]
-        const pop = () => this.state.stack[this.state.stack.length - 1].screen.remove(animation, onFinish)
-        return this.setState({ stack: cut(this.state.stack) }, pop)
-      })
-    const details = { id, route, params: { ...params }, pop }
+    const index = this.state.stack.length - idShift
+    const key = `${index}-${route}-${parseInt(Math.random() * 10000)}`
+
     const Route = this.props.routes[route]
     const screen = (
       <Screen
         animation={Animation.withDefault(animation)}
-        key={`${id}-${route}-${parseInt(Math.random() * 10000)}`}
-        removeScreen={this.state.stack.length > 0 ? this.removeScreen : undefined}
-        registerScreen={methods => {
+        key={key}
+        removeScreen={resolve => this.setState({ stack: this.state.stack.slice(0, -1) }, resolve)}
+        registerScreen={remove => {
+          const pop = animation =>
+            this.actions.add(onFinish => {
+              const cut = array => [...array.slice(0, index + 1), array[array.length - 1]]
+              const pop = () => this.state.stack[this.state.stack.length - 1].screen.remove(animation, onFinish)
+              return this.setState({ stack: cut(this.state.stack) }, pop)
+            })
+          const details = { route, params: { ...params }, pop }
           this.setState({
             stack: [
               ...this.state.stack.slice(0, -1),
-              { ...this.state.stack[this.state.stack.length - 1], screen: { ...methods, details } }
+              { ...this.state.stack[this.state.stack.length - 1], screen: { remove, details } }
             ]
           })
         }}
@@ -70,8 +72,6 @@ class Router extends React.Component {
     )
     this.setState({ stack: [...this.state.stack, screen] })
   }
-
-  removeScreen = resolve => this.setState({ stack: this.state.stack.slice(0, -1) }, resolve)
 
   componentWillMount = () => {
     Object.defineProperty(this.router, 'stack', {
