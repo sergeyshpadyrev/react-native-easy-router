@@ -8,7 +8,7 @@ class Screen extends React.Component {
 
   componentDidMount = () => {
     const { animation: { type, duration, easing }, registerScreen } = this.props
-    registerScreen({ remove: this.remove })
+    registerScreen(this.remove)
     !!type ? this.view.transitionTo(Animation.end(type), duration, easing) : this.props.onActionFinished()
   }
 
