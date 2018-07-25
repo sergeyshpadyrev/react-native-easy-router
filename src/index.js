@@ -1,30 +1,58 @@
+import Actions from './actions'
 import Hardware from './hardware'
-import { mapByKey, prepareAnimation } from './util'
+import { prepareAnimation } from './util'
 import React from 'react'
 import Screen from './screen'
 import styles from './styles'
 import { View } from 'react-native'
 
 class Router extends React.Component {
-  actions = []
-  actionProcessing = false
+  actions = new Actions()
   screens = []
   state = { stack: [] }
 
-  allRoutesAction = type =>
-    mapByKey(this.props.routes, route => (params, animation) => this.addAction({ type, route, params }, animation))
-
+  forAllRoutes = mapper => Object.assign(...Object.keys(this.props.routes).map(route => ({ [route]: mapper(route) })))
   router = {
-    pop: animation => this.addAction({ type: 'pop' }, animation),
-    push: this.allRoutesAction('push'),
-    replace: this.allRoutesAction('replace'),
-    reset: this.allRoutesAction('reset')
+    pop: animation =>
+      this.actions.add(onFinish => {
+        if (this.screens.length > 0)
+          this.screens[this.screens.length - 1].remove(prepareAnimation(animation).animation, onFinish)
+      }),
+    push: this.forAllRoutes(route => (params, animation) =>
+      this.actions.add(onFinish => this.addScreen(route, params, prepareAnimation(animation).animation, onFinish))
+    ),
+    replace: this.forAllRoutes(route => (params, animation) =>
+      this.actions.add(onFinish => {
+        const removeReplacedScreen = () => {
+          const cut = array => [...array.slice(0, -2), array[array.length - 1]]
+          this.screens = cut(this.screens)
+          this.setState({ stack: cut(this.state.stack) }, onFinish)
+        }
+        this.addScreen(route, params, prepareAnimation(animation).animation, removeReplacedScreen, 1)
+      })
+    ),
+    reset: this.forAllRoutes(route => (params, animation) =>
+      this.actions.add(onFinish => {
+        const removeAllScreens = () => {
+          const cut = array => [array[array.length - 1]]
+          this.screens = cut(this.screens)
+          this.setState({ stack: cut(this.state.stack) }, onFinish)
+        }
+        this.addScreen(route, params, prepareAnimation(animation).animation, removeAllScreens, this.screens.length)
+      })
+    )
   }
   hardware = new Hardware(this.router, this.props.disableHardwareBack)
 
-  addScreen = (route, params, animation, onActionFinished = this.onActionFinished, idShift = 0) => {
+  addScreen = (route, params, animation, onActionFinished, idShift = 0) => {
     const id = this.screens.length - idShift
-    const pop = animation => this.addAction({ type: 'popTo', id }, animation)
+    const pop = animation =>
+      this.actions.add(onFinish => {
+        const cut = array => [...array.slice(0, id + 1), array[array.length - 1]]
+        const pop = () => this.screens[this.screens.length - 1].remove(prepareAnimation(animation).animation, onFinish)
+        this.screens = cut(this.screens)
+        return this.setState({ stack: cut(this.state.stack) }, pop)
+      })
     const details = { id, route, params: { ...params }, pop }
     const Route = this.props.routes[route]
     const screen = (
@@ -42,73 +70,7 @@ class Router extends React.Component {
 
   removeScreen = resolve => {
     this.screens = this.screens.slice(0, -1)
-    this.setState({ stack: this.state.stack.slice(0, -1) }, () => {
-      resolve()
-      this.onActionFinished()
-    })
-  }
-
-  addAction = (action, animation) =>
-    new Promise(resolve => {
-      this.actions = [...this.actions, { ...action, ...prepareAnimation(animation), resolve }]
-      this.startAction()
-    })
-
-  startAction = () => {
-    if (this.actionProcessing || this.actions.length === 0) return
-
-    const [action, ...restActions] = this.actions
-
-    this.actionProcessing = true
-    this.actions = restActions
-
-    if (['pop', 'popTo'].includes(action.type) && this.screens.length === 0) return
-
-    switch (action.type) {
-      case 'pop':
-        return this.screens[this.screens.length - 1].remove(action.animation, action.resolve)
-      case 'popTo':
-        const cut = array => [...array.slice(0, parseInt(action.id) + 1), array[array.length - 1]]
-        const pop = () => this.screens[this.screens.length - 1].remove(action.animation, action.resolve)
-        this.screens = cut(this.screens)
-        return this.setState({ stack: cut(this.state.stack) }, pop)
-      case 'push':
-        const onActionFinished = () => {
-          action.resolve()
-          this.onActionFinished()
-        }
-        return this.addScreen(action.route, action.params, action.animation, onActionFinished)
-      case 'replace':
-        const removeReplacedScreen = () => {
-          const cut = array => [...array.slice(0, -2), array[array.length - 1]]
-          this.screens = cut(this.screens)
-          this.setState({ stack: cut(this.state.stack) }, () => {
-            action.resolve()
-            this.onActionFinished()
-          })
-        }
-        return this.addScreen(action.route, action.params, action.animation, removeReplacedScreen, 1)
-      case 'reset':
-        const removeAllScreens = () => {
-          const cut = array => [array[array.length - 1]]
-          this.screens = cut(this.screens)
-          this.setState({ stack: cut(this.state.stack) }, () => {
-            action.resolve()
-            this.onActionFinished()
-          })
-        }
-        return this.addScreen(action.route, action.params, action.animation, removeAllScreens, this.screens.length)
-    }
-  }
-
-  onActionFinished = () => {
-    this.actionProcessing = false
-    this.startAction()
-  }
-
-  onHardwareBackPressed = () => {
-    if (this.router.stack.length > 1) this.router.pop()
-    return true
+    this.setState({ stack: this.state.stack.slice(0, -1) }, resolve)
   }
 
   componentWillMount = () => {
