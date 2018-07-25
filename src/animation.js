@@ -1,6 +1,7 @@
 import { Dimensions } from 'react-native'
 const { width, height } = Dimensions.get('window')
 
+const defaultAnimation = { type: 'right', duration: 300, easing: 'ease' }
 const types = {
   none: [{}, {}],
   fade: [{ opacity: 0 }, { opacity: 1 }],
@@ -13,7 +14,7 @@ const types = {
 }
 
 export default {
-  default: { type: 'right', duration: 300, easing: 'ease' },
+  withDefault: animation => ({ ...defaultAnimation, ...animation }),
   start: type => types[type][0],
   end: type => types[type][1]
 }

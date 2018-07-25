@@ -1,6 +1,6 @@
 import Actions from './actions'
+import Animation from './animation'
 import Hardware from './hardware'
-import { prepareAnimation } from './util'
 import React from 'react'
 import Screen from './screen'
 import styles from './styles'
@@ -15,11 +15,10 @@ class Router extends React.Component {
   router = {
     pop: animation =>
       this.actions.add(onFinish => {
-        if (this.screens.length > 0)
-          this.screens[this.screens.length - 1].remove(prepareAnimation(animation).animation, onFinish)
+        if (this.screens.length > 0) this.screens[this.screens.length - 1].remove(animation, onFinish)
       }),
     push: this.forAllRoutes(route => (params, animation) =>
-      this.actions.add(onFinish => this.addScreen(route, params, prepareAnimation(animation).animation, onFinish))
+      this.actions.add(onFinish => this.addScreen(route, params, animation, onFinish))
     ),
     replace: this.forAllRoutes(route => (params, animation) =>
       this.actions.add(onFinish => {
@@ -28,7 +27,7 @@ class Router extends React.Component {
           this.screens = cut(this.screens)
           this.setState({ stack: cut(this.state.stack) }, onFinish)
         }
-        this.addScreen(route, params, prepareAnimation(animation).animation, removeReplacedScreen, 1)
+        this.addScreen(route, params, animation, removeReplacedScreen, 1)
       })
     ),
     reset: this.forAllRoutes(route => (params, animation) =>
@@ -38,7 +37,7 @@ class Router extends React.Component {
           this.screens = cut(this.screens)
           this.setState({ stack: cut(this.state.stack) }, onFinish)
         }
-        this.addScreen(route, params, prepareAnimation(animation).animation, removeAllScreens, this.screens.length)
+        this.addScreen(route, params, animation, removeAllScreens, this.screens.length)
       })
     )
   }
@@ -49,7 +48,7 @@ class Router extends React.Component {
     const pop = animation =>
       this.actions.add(onFinish => {
         const cut = array => [...array.slice(0, id + 1), array[array.length - 1]]
-        const pop = () => this.screens[this.screens.length - 1].remove(prepareAnimation(animation).animation, onFinish)
+        const pop = () => this.screens[this.screens.length - 1].remove(animation, onFinish)
         this.screens = cut(this.screens)
         return this.setState({ stack: cut(this.state.stack) }, pop)
       })
@@ -57,7 +56,7 @@ class Router extends React.Component {
     const Route = this.props.routes[route]
     const screen = (
       <Screen
-        animation={animation}
+        animation={Animation.withDefault(animation)}
         key={`${id}-${route}-${parseInt(Math.random() * 10000)}`}
         removeScreen={this.state.stack.length > 0 ? this.removeScreen : undefined}
         registerScreen={methods => (this.screens = [...this.screens, { ...methods, details }])}
@@ -81,14 +80,12 @@ class Router extends React.Component {
     })
 
     if (this.props.routerRef) this.props.routerRef(this.router)
-    this.addScreen(this.props.initialRoute, {}, { type: 'none' })
 
+    this.addScreen(this.props.initialRoute, {}, { type: 'none' })
     this.hardware.subscribe()
   }
 
-  componentWillUnmount = () => {
-    this.hardware.unsubscribe()
-  }
+  componentWillUnmount = () => this.hardware.unsubscribe()
 
   render = () => <View style={styles.router}>{this.state.stack}</View>
 }
