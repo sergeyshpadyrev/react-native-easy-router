@@ -14,8 +14,12 @@ class Router extends React.Component {
   router = {
     pop: animation =>
       this.actions.add(onFinish => {
-        if (this.state.stack.length > 0)
-          this.state.stack[this.state.stack.length - 1].reference.remove(animation, onFinish)
+        if (this.state.stack.length === 0) return
+        animation = Animation.withDefault(animation)
+
+        this.state.stack[this.state.stack.length - 1].reference
+          .transitionTo(Animation.start(animation.type), animation.duration, animation.easing)
+          .then(() => this.setState({ stack: this.state.stack.slice(0, -1) }, onFinish))
       }),
     push: this.forAllRoutes(route => (params, animation) =>
       this.actions.add(onFinish => this.addScreen(route, params, animation, onFinish))
@@ -53,7 +57,7 @@ class Router extends React.Component {
         const pop = () =>
           this.state.stack[this.state.stack.length - 1].reference
             .transitionTo(Animation.start(animation.type), animation.duration, animation.easing)
-            .then(onFinish)
+            .then(() => this.setState({ stack: this.state.stack.slice(0, -1) }, onFinish))
         return this.setState({ stack: cut(this.state.stack) }, pop)
       })
     }
