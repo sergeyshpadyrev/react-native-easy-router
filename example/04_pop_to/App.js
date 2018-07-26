@@ -31,7 +31,7 @@ const Screen2 = ({ router }) => (
 
 const Screen3 = ({ router }) => (
   <Screen color="yellow">
-    <Text onPress={() => router.stack[0].popTo()}>Go back to screen 1 {/* Stack will be [Screen1] */}</Text>
+    <Text onPress={() => router.stack[0].pop()}>Go back to screen 1 {/* Stack will be [Screen1] */}</Text>
   </Screen>
 )
 

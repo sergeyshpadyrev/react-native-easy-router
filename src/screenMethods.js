@@ -2,7 +2,10 @@ import Animation from './animation'
 
 export default class ScreenMethods {
   constructor(router, screen, index) {
-    this.popTo = animation =>
+    const forAllRoutes = mapper =>
+      Object.assign(...Object.keys(router.props.routes).map(route => ({ [route]: mapper(route) })))
+
+    this.pop = animation =>
       router.actions.add(onFinish => {
         const removeLast = () => {
           const lastScreen = router.state.stack[router.state.stack.length - 1].screen
@@ -13,5 +16,15 @@ export default class ScreenMethods {
         const stack = [...router.state.stack.slice(0, index + 1), router.state.stack[router.state.stack.length - 1]]
         router.setState({ stack }, removeLast)
       })
+
+    this.replace = forAllRoutes(route => (params, animation) =>
+      router.actions.add(onFinish => {
+        const onAdd = () => {
+          const stack = [...router.state.stack.slice(0, index), router.state.stack[router.state.stack.length - 1]]
+          router.setState({ stack }, onFinish)
+        }
+        router.addScreen(route, params, animation, onAdd, router.state.stack.length - index)
+      })
+    )
   }
 }
