@@ -22,37 +22,41 @@ class Router extends React.Component {
     const pop = animation => {
       animation = Animation.withDefault(animation)
       this.actions.add(onFinish => {
-        const cut = array => [...array.slice(0, index + 1), array[array.length - 1]]
-        const pop = () =>
-          this.state.stack[this.state.stack.length - 1].reference
+        const pop = () => {
+          const lastScreen = this.state.stack[this.state.stack.length - 1]
+          const onAnimationFinish = () => this.setState({ stack: this.state.stack.slice(0, -1) }, onFinish)
+          lastScreen.reference
             .transitionTo(Animation.start(animation.type), animation.duration, animation.easing)
-            .then(() => this.setState({ stack: this.state.stack.slice(0, -1) }, onFinish))
-        return this.setState({ stack: cut(this.state.stack) }, pop)
+            .then(onAnimationFinish)
+        }
+
+        return this.setState(
+          { stack: [...this.state.stack.slice(0, index + 1), this.state.stack[this.state.stack.length - 1]] },
+          pop
+        )
       })
     }
     const settings = { route, params: { ...params }, pop }
-
     const Route = this.props.routes[route]
+
+    const referenceHandler = reference => {
+      if (!reference) return
+
+      const startInAnimation = () =>
+        reference
+          .transitionTo(Animation.end(animation.type), animation.duration, animation.easing)
+          .then(onActionFinished)
+
+      const previous = this.state.stack.slice(0, -1)
+      const last = this.state.stack[this.state.stack.length - 1]
+      this.setState({ stack: [...previous, { ...last, settings, reference }] }, startInAnimation)
+    }
 
     const screen = (
       <Animatable.View
         key={key}
         style={{ ...styles.screen, ...Animation.start(animation.type) }}
-        ref={reference => {
-          if (!!reference)
-            this.setState(
-              {
-                stack: [
-                  ...this.state.stack.slice(0, -1),
-                  { ...this.state.stack[this.state.stack.length - 1], settings, reference }
-                ]
-              },
-              () =>
-                reference
-                  .transitionTo(Animation.end(animation.type), animation.duration, animation.easing)
-                  .then(onActionFinished)
-            )
-        }}
+        ref={referenceHandler}
       >
         <Route router={this.router} {...params} />
       </Animatable.View>
