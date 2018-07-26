@@ -1,6 +1,6 @@
 export default class Router {
   constructor(router) {
-    Object.defineProperty(this, 'stack', { get: () => router.state.stack.map(route => route.settings) })
+    Object.defineProperty(this, 'stack', { get: () => router.state.stack.map(route => route.methods) })
 
     const forAllRoutes = mapper =>
       Object.assign(...Object.keys(router.props.routes).map(route => ({ [route]: mapper(route) })))
