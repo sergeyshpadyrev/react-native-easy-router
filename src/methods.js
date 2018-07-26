@@ -8,10 +8,9 @@ export default class Router {
     this.pop = animation =>
       router.actions.add(onFinish => {
         if (router.state.stack.length === 0) return
-        animation = Animation.withDefault(animation)
 
-        router.state.stack[router.state.stack.length - 1].reference
-          .transitionTo(Animation.start(animation.type), animation.duration, animation.easing)
+        router.state.stack[router.state.stack.length - 1].screen
+          .animateOut(animation)
           .then(() => router.setState({ stack: router.state.stack.slice(0, -1) }, onFinish))
       })
 
@@ -23,7 +22,7 @@ export default class Router {
       router.actions.add(onFinish => {
         const removeReplacedScreen = () =>
           router.setState(
-            { stack: [...router.state.stack.slice(0, -2), array[router.state.stack.length - 1]] },
+            { stack: [...router.state.stack.slice(0, -2), router.state.stack[router.state.stack.length - 1]] },
             onFinish
           )
         router.addScreen(route, params, animation, removeReplacedScreen, 1)

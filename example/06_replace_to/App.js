@@ -32,14 +32,14 @@ const Screen2 = ({ router }) => (
 const Screen3 = ({ router }) => (
   <Screen color="yellow">
     <Text onPress={() => router.stack[1].replace.Screen4()}>
-      Replace screen 1 with screen 4 {/* Stack will be [Screen1, Screen4] */}
+      Replace screen 2 with screen 4 {/* Stack will be [Screen1, Screen4] */}
     </Text>
   </Screen>
 )
 
 const Screen4 = ({ router }) => (
   <Screen color="orange">
-    <Text onPress={() => router.replace.Screen2()}>Replace with screen 2 {/* Stack will be [Screen1, Screen2] */}</Text>
+    <Text onPress={() => router.pop()}>Go back to screen 1 {/* Stack will be [Screen1] */}</Text>
   </Screen>
 )
 
