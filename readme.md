@@ -11,34 +11,30 @@ npm install --save react-native-router-flux
 ```javascript
 import React from 'react'
 import Router from 'react-native-easy-router'
-import { SafeAreaView, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 const First = ({ router }) => (
-  <View style={{ backgroundColor: 'red', flex: 1 }}>
+  <View style={{ backgroundColor: 'white', flex: 1 }}>
     <Text>First screen</Text>
-    <Text onPress={() => router.push.second({ name: 'John' })}>Go forward</Text>
+    <Text onPress={() => router.push.Second({ name: 'John' })}>Go forward</Text>
   </View>
 )
 
 const Second = ({ router, name }) => (
-  <View style={{ backgroundColor: 'blue', flex: 1 }}>
+  <View style={{ backgroundColor: 'pink', flex: 1 }}>
     <Text>Second screen</Text>
     <Text>Hello {name}!</Text>
     <Text onPress={() => router.pop()}>Go back</Text>
   </View>
 )
 
-const routes = { first: First, second: Second }
-const App = () => (
-  <SafeAreaView style={{ flex: 1 }}>
-    <Router routes={routes} initialRoute="first" />
-  </SafeAreaView>
-)
-
-You can see more usage examples in [example](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/master/example) directory
+const routes = { First, Second }
+const App = () => <Router routes={routes} initialRoute="First" />
 
 export default App
 ```
+
+You can see more usage examples in [example](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/master/example) directory
 
 ## API
 
@@ -108,11 +104,11 @@ router.stack[0].pop({ type: 'bottom' }).then(() => console.log('Popped to route'
 
 | Property | Available values                                                           |
 | -------- | -------------------------------------------------------------------------- |
-| type     | 'bottom','left', 'right', 'top', null                                      |
+| type     | 'none', 'bottom','left', 'right', 'top'                                    |
 | duration | integer number in milliseconds                                             |
 | easing   | easing type from here (https://github.com/oblador/react-native-animatable) |
 
-When you set animation type to `null` no animation is shown
+When you set animation type to `none` no animation is shown
 
 ```javascript
 // Example
