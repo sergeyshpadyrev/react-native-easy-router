@@ -21,20 +21,19 @@ export default class Router {
 
     this.replace = forAllRoutes(route => (params, animation) =>
       router.actions.add(onFinish => {
-        const removeReplacedScreen = () => {
-          const cut = array => [...array.slice(0, -2), array[array.length - 1]]
-          router.setState({ stack: cut(router.state.stack) }, onFinish)
-        }
+        const removeReplacedScreen = () =>
+          router.setState(
+            { stack: [...router.state.stack.slice(0, -2), array[router.state.stack.length - 1]] },
+            onFinish
+          )
         router.addScreen(route, params, animation, removeReplacedScreen, 1)
       })
     )
 
     this.reset = forAllRoutes(route => (params, animation) =>
       router.actions.add(onFinish => {
-        const removeAllScreens = () => {
-          const cut = array => [array[array.length - 1]]
-          router.setState({ stack: cut(router.state.stack) }, onFinish)
-        }
+        const removeAllScreens = () =>
+          router.setState({ stack: [router.state.stack[router.state.stack.length - 1]] }, onFinish)
         router.addScreen(route, params, animation, removeAllScreens, router.state.stack.length)
       })
     )
