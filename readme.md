@@ -34,7 +34,7 @@ const App = () => <Router routes={routes} initialRoute="First" />
 export default App
 ```
 
-You can see more usage examples in [example](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/master/example) directory
+You can see more usage examples in [examples](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/master/example)
 
 ## API
 
@@ -51,7 +51,7 @@ You can see more usage examples in [example](https://github.com/sergeyshpadyrev/
 // Example
 
 <Router
-  routes={{ first: First, second: Second }}
+  routes={{ First, Second }}
   initialRoute="first"
   router={router => (this.router = router)}
   disableHardwareBack={false}
@@ -76,28 +76,30 @@ All functions return promises. Promise resolves when action finishes
 // Example
 
 router.pop({type:'top'}).then(() => console.log('Popped')
-router.push.first({value:123}, {type:'top'}).then(() => console.log('Pushed'))
-router.replace.second({value:123}, {type:'top'}).then(() => console.log('Replaced'))
-router.reset.first({value:123}, {type:'top'}).then(() => console.log('Reset'))
+router.push.First({value:123}, {type:'top'}).then(() => console.log('Pushed'))
+router.replace.Second({value:123}, {type:'top'}).then(() => console.log('Replaced'))
+router.reset.First({value:123}, {type:'top'}).then(() => console.log('Reset'))
 ```
 
 #### Router stack element
 
-| Parameter | Type     | Description                            |
-| --------- | -------- | -------------------------------------- |
-| id        | integer  | Index of route in stack                |
-| route     | string   | Route name                             |
-| params    | object   | Parameters passed to screen            |
-| pop       | function | Function to pop all screens until this |
+| Parameter | Type     | Description                                         |
+| --------- | -------- | --------------------------------------------------- |
+| id        | integer  | Id of route                                         |
+| route     | string   | Route name                                          |
+| params    | object   | Parameters passed to screen                         |
+| pop       | function | Function to pop all screens until this              |
+| replace   | function | Function to replace all screens in stack after this |
 
 ```javascript
 // Example
 
-console.log(router.stack[0].id) // 0
-console.log(router.stack[0].route) // 'first'
-console.log(router.stack[0].params) // {}
+console.log(router.stack[0].id)
+console.log(router.stack[0].route)
+console.log(router.stack[0].params)
 
 router.stack[0].pop({ type: 'bottom' }).then(() => console.log('Popped to route'))
+router.stack[0].replace.Second().then(() => console.log('Replaced'))
 ```
 
 #### Animation
