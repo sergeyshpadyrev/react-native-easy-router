@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-npm install --save react-native-router-flux
+npm install --save react-native-easy-router
 ```
 
 ## Usage
