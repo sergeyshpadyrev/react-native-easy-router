@@ -20,7 +20,7 @@ export default class Screen extends React.Component {
     const { type } = Animation.withDefault(this.props.animation)
     const style = { ...styles.screen, ...Animation.start(type) }
     return (
-      <Animatable.View style={style} ref={view => (this.view = view)}>
+      <Animatable.View style={style} ref={view => (this.view = view)} useNativeDriver={true}>
         {this.props.children}
       </Animatable.View>
     )
