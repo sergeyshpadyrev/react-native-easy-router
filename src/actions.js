@@ -1,23 +1,13 @@
 export default class ActionMachine {
-  actions = []
-  currentAction = null
+  processing = false
 
   add = process =>
     new Promise(resolve => {
-      this.actions = [...this.actions, { process, resolve }]
-      this.process()
+      if (this.processing) return
+      this.processing = true
+      process(() => {
+        this.processing = false
+        resolve()
+      })
     })
-
-  process = () => {
-    if (!!this.currentAction || !this.actions.length) return
-
-    this.currentAction = this.actions[0]
-    this.actions = this.actions.slice(1)
-
-    this.currentAction.process(() => {
-      this.currentAction.resolve()
-      this.currentAction = null
-      this.process()
-    })
-  }
 }
