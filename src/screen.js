@@ -11,7 +11,7 @@ export default class Screen extends React.Component {
   }
 
   animateOut = animation => {
-    const { type, duration, easing } = Animation.withDefault(animation)
+    const { type, duration, easing } = Animation.withDefault({ ...this.props.animation, ...animation })
     if (type === 'none') return Promise.resolve()
     return this.view.transitionTo(Animation.start(type), duration, easing)
   }
