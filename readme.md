@@ -106,7 +106,7 @@ router.stack[0].replace.Second().then(() => console.log('Replaced'))
 
 | Property | Available values                                                           |
 | -------- | -------------------------------------------------------------------------- |
-| type     | 'none', 'bottom','left', 'right', 'top'                                    |
+| type     | 'none', 'bottom','left', 'right', 'top', 'fade'                            |
 | duration | integer number in milliseconds                                             |
 | easing   | easing type from here (https://github.com/oblador/react-native-animatable) |
 
