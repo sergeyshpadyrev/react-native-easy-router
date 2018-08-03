@@ -10,7 +10,7 @@ export default class Router {
         if (router.state.stack.length === 0) return
 
         router.state.stack[router.state.stack.length - 1].screen
-          .animateOut(animation)
+          .animateOut(animation, router.state.stack)
           .then(() => router.setState({ stack: router.state.stack.slice(0, -1) }, onFinish))
       })
 
