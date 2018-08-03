@@ -8,9 +8,9 @@ export default class ScreenMethods {
     this.pop = animation =>
       router.actions.add(onFinish => {
         const removeLast = () => {
-          const lastScreen = router.state.stack[router.state.stack.length - 1].screen
+          const { screen: lastScreen, props: { animation: lastAnimation } } = router.state.stack[router.state.stack.length - 1]
           const onAnimationFinish = () => router.setState({ stack: router.state.stack.slice(0, -1) }, onFinish)
-          lastScreen.animateOut(animation).then(onAnimationFinish)
+          lastScreen.animateOut(animation || lastAnimation).then(onAnimationFinish)
         }
 
         const stack = [...router.state.stack.slice(0, index + 1), router.state.stack[router.state.stack.length - 1]]
