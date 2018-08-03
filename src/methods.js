@@ -7,11 +7,10 @@ export default class Router {
 
     this.pop = animation =>
       router.actions.add(onFinish => {
-        if (router.state.stack.length === 0) return
-
-        router.state.stack[router.state.stack.length - 1].screen
-          .animateOut(animation)
-          .then(() => router.setState({ stack: router.state.stack.slice(0, -1) }, onFinish))
+        if (router.state.stack.length < 2) return
+        const { screen: lastScreen, props: { animation: lastAnimation } } = router.state.stack[router.state.stack.length - 1]
+        const onAnimationFinish = () => router.setState({ stack: router.state.stack.slice(0, -1) }, onFinish)
+        lastScreen.animateOut(animation || lastAnimation).then(onAnimationFinish)
       })
 
     this.push = forAllRoutes(route => (params, animation) =>
