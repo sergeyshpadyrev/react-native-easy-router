@@ -1,7 +1,10 @@
 export default {
-  router: { flex: 1 },
+  router: {
+    backgroundColor: 'black',
+    flex: 1
+  },
   screen: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     height: '100%',
     position: 'absolute',
     width: '100%'

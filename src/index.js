@@ -27,7 +27,7 @@ class Router extends React.Component {
       const last = this.state.stack[this.state.stack.length - 1]
       const stack = [...previous, { ...last, methods: { ...methods, id, route, params }, screen }]
 
-      this.setState({ stack }, () => screen.animateIn().then(onActionFinished))
+      this.setState({ stack }, () => screen.animateIn(stack).then(onActionFinished))
     }
     const screen = (
       <Screen animation={animation} key={id} ref={screenReferenceHandler}>
