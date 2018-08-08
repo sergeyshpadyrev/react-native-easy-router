@@ -112,13 +112,11 @@ router.stack[0].replace.Second().then(() => console.log('Replaced'))
 
 When you set animation type to `none` no animation is shown
 
-```javascript
+````javascript
 // Example
 
 router.pop({ type: 'bottom', duration: 500, easing: 'ease-in-out' })
 ```
-
-###### Custom animation
 
 Also you can pass your custom animation type to animation parameters. Where type is array consisting of:
 
@@ -128,15 +126,13 @@ Also you can pass your custom animation type to animation parameters. Where type
 | 1     | Object  | Start position for out animation / end position for in animation |
 | 2     | Boolean | Usage of native driver animation                                 |
 
-For example:
-
-```
+```javascript
 router.push.Second({}, { type: [{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }]}, false] })
-```
+````
 
-The only one limitation for custom animations is that the screen out animation can't have different from the screen in animation `useNativeDriver` property:
+The only limitation for custom animations is that the out animation can't be different than the in animation `useNativeDriver` property:
 
-```
+```javascript
 router.push.Second({}, { type: [{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }]}, false] })
 router.pop({}, { type: [{ opacity: 1}] }, { opacity:0}, true] }) // THIS WILL NOT WORK AFTER PUSH ABOVE
 ```
