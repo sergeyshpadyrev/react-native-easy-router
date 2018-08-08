@@ -42,6 +42,7 @@ You can see more usage examples in [examples](https://github.com/sergeyshpadyrev
 
 | Property            | Type     | Required | Description                                          |
 | ------------------- | -------- | -------- | ---------------------------------------------------- |
+| animations          | object   |          | custom animations                                    |
 | routes              | object   | required | route components keyed by route name                 |
 | initialRoute        | string   | required | initial route name                                   |
 | router              | function |          | function to get router object                        |
@@ -102,13 +103,13 @@ router.stack[0].pop({ type: 'bottom' }).then(() => console.log('Popped to route'
 router.stack[0].replace.Second().then(() => console.log('Replaced'))
 ```
 
-#### Animation
+#### Animations
 
-| Property | Available values                                                           |
-| -------- | -------------------------------------------------------------------------- |
-| type     | 'none', 'bottom','left', 'right', 'top', 'fade'                            |
-| duration | integer number in milliseconds                                             |
-| easing   | easing type from here (https://github.com/oblador/react-native-animatable) |
+| Property | Available values                                                                                      |
+| -------- | ----------------------------------------------------------------------------------------------------- |
+| type     | 'none', 'bottom','left', 'left-bottom', 'left-top' 'right', 'right-bottom', 'right-top' 'top', 'fade' |
+| duration | integer number in milliseconds                                                                        |
+| easing   | easing type from here (https://github.com/oblador/react-native-animatable)                            |
 
 When you set animation type to `none` no animation is shown
 
@@ -116,4 +117,33 @@ When you set animation type to `none` no animation is shown
 // Example
 
 router.pop({ type: 'bottom', duration: 500, easing: 'ease-in-out' })
+```
+
+#### Custom animations
+
+Also you can pass your custom animation types to router. Where type is array consisting of:
+
+| Index | Type    | Description                                                      |
+| ----- | ------- | ---------------------------------------------------------------- |
+| 0     | Object  | Start position for in animation / end position for out animation |
+| 1     | Object  | Start position for out animation / end position for in animation |
+| 2     | Boolean | Usage of native driver animation                                 |
+
+```javascript
+// Example
+
+const animations = { 'skew' : [{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }] }, false] }
+<Router animations={animations} routes={First, Second} initialRoute="First"/>
+
+// then
+router.push.Second({}, { type: 'skew' })
+```
+
+The only limitation for custom animations is that the out animation `useNativeDriver` property can't be different from the in animation `useNativeDriver` property
+
+```javascript
+// You can't push screen with animation like this
+[{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }]}, false]
+// and then pop with animation like that
+[{ opacity: 1}] }, { opacity:0}, true]
 ```
