@@ -1,5 +1,5 @@
 import Actions from './actions'
-import Animation from './animation'
+import Animator from './animation'
 import Hardware from './hardware'
 import Methods from './methods'
 import React from 'react'
@@ -10,6 +10,7 @@ import { View } from 'react-native'
 
 class Router extends React.Component {
   actions = new Actions()
+  animator = new Animator(this.props.animations)
   state = { stack: [] }
 
   methods = new Methods(this)
@@ -30,7 +31,7 @@ class Router extends React.Component {
       this.setState({ stack }, () => screen.animateIn().then(onActionFinished))
     }
     const screen = (
-      <Screen animation={animation} key={id} ref={screenReferenceHandler}>
+      <Screen animation={animation} animator={this.animator} key={id} ref={screenReferenceHandler}>
         <Route router={this.methods} {...params} />
       </Screen>
     )

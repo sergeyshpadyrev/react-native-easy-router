@@ -102,7 +102,7 @@ router.stack[0].pop({ type: 'bottom' }).then(() => console.log('Popped to route'
 router.stack[0].replace.Second().then(() => console.log('Replaced'))
 ```
 
-#### Animation
+#### Animations
 
 | Property | Available values                                                                                      |
 | -------- | ----------------------------------------------------------------------------------------------------- |
@@ -118,7 +118,9 @@ When you set animation type to `none` no animation is shown
 router.pop({ type: 'bottom', duration: 500, easing: 'ease-in-out' })
 ```
 
-Also you can pass your custom animation type to animation parameters. Where type is array consisting of:
+#### Custom animations
+
+Also you can pass your custom animation types to router. Where type is array consisting of:
 
 | Index | Type    | Description                                                      |
 | ----- | ------- | ---------------------------------------------------------------- |
@@ -129,12 +131,18 @@ Also you can pass your custom animation type to animation parameters. Where type
 ```javascript
 // Example
 
-router.push.Second({}, { type: [{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }] }, false] })
+const animations = { 'skew' : [{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }] }, false] }
+<Router animations={animations} routes={First, Second} initialRoute="First"/>
+
+// then
+router.push.Second({}, { type: 'skew' })
 ```
 
-The only limitation for custom animations is that the out animation can't be different than the in animation `useNativeDriver` property
+The only limitation for custom animations is that the out animation `useNativeDriver` property can't be different from the in animation `useNativeDriver` property
 
 ```javascript
-router.push.Second({}, { type: [{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }]}, false] })
-router.pop({}, { type: [{ opacity: 1}] }, { opacity:0}, true] }) // THIS WILL NOT WORK AFTER PUSH ABOVE
+// You can't push screen with animation like this
+[{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }]}, false]
+// and then pop with animation like that
+[{ opacity: 1}] }, { opacity:0}, true]
 ```

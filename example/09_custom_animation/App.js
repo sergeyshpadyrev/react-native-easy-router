@@ -19,11 +19,13 @@ const Screen = ({ children, color }) => (
 )
 
 const { width, height } = Dimensions.get('window')
-const type = [{ transform: [{ skewX: '90deg' }], opacity: 0 }, { transform: [{ skewX: '0deg' }], opacity: 1 }, false]
+const animations = {
+  'skew-fade': [{ transform: [{ skewX: '90deg' }], opacity: 0 }, { transform: [{ skewX: '0deg' }], opacity: 1 }, false]
+}
 
 const Screen1 = ({ router }) => (
   <Screen color="white">
-    <Text onPress={() => router.push.Screen2({}, { type })}>
+    <Text onPress={() => router.push.Screen2({}, { type: 'skew-fade' })}>
       Go to screen 2 {/* Stack will be [Screen1, Screen2] */}
     </Text>
   </Screen>
@@ -35,4 +37,4 @@ const Screen2 = ({ router }) => (
   </Screen>
 )
 
-export default () => <Router routes={{ Screen1, Screen2 }} initialRoute="Screen1" />
+export default () => <Router animations={animations} routes={{ Screen1, Screen2 }} initialRoute="Screen1" />
