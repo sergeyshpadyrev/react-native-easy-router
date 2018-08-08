@@ -1,6 +1,6 @@
 {
   "name": "react-native-easy-router",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "main": "src/index.js",
   "dependencies": {
     "react-native-animatable-promise": "^1.2.4"

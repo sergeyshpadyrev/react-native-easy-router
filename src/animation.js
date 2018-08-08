@@ -2,7 +2,7 @@ import { Dimensions } from 'react-native'
 const { width, height } = Dimensions.get('window')
 
 const defaultAnimation = { type: 'right', duration: 300, easing: 'ease' }
-const types = {
+const defaultTypes = {
   none: [{}, {}, true],
   fade: [{ opacity: 0 }, { opacity: 1 }, true],
 
@@ -33,11 +33,15 @@ const types = {
   bottom: [{ transform: [{ translateY: height }] }, { transform: [{ translateY: 0 }] }, true],
   top: [{ transform: [{ translateY: -height }] }, { transform: [{ translateY: 0 }] }, true]
 }
-const getTypeProperty = index => type => (Array.isArray(type) ? type : types[type])[index]
 
-export default {
-  withDefault: animation => ({ ...defaultAnimation, ...animation }),
-  start: getTypeProperty(0),
-  end: getTypeProperty(1),
-  useNativeDriver: getTypeProperty(2)
+export default class Animator {
+  constructor(customAnimationTypes) {
+    this.types = { ...defaultTypes, ...customAnimationTypes }
+  }
+  getTypeProperty = index => type => this.types[type][index]
+
+  withDefault = animation => ({ ...defaultAnimation, ...animation })
+  start = this.getTypeProperty(0)
+  end = this.getTypeProperty(1)
+  useNativeDriver = this.getTypeProperty(2)
 }
