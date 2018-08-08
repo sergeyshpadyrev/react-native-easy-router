@@ -42,6 +42,7 @@ You can see more usage examples in [examples](https://github.com/sergeyshpadyrev
 
 | Property            | Type     | Required | Description                                          |
 | ------------------- | -------- | -------- | ---------------------------------------------------- |
+| animations          | object   |          | custom animations                                    |
 | routes              | object   | required | route components keyed by route name                 |
 | initialRoute        | string   | required | initial route name                                   |
 | router              | function |          | function to get router object                        |
