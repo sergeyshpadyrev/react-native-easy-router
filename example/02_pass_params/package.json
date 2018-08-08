@@ -7,7 +7,7 @@
     "expo": "^28.0.0",
     "react": "^16.4.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-28.0.0.tar.gz",
-    "react-native-easy-router": "^2.1.0"
+    "react-native-easy-router": "^2.2.0"
   },
   "devDependencies": {
     "react-native-scripts": "^1.14.0"
