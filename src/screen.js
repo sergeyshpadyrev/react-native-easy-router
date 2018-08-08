@@ -11,7 +11,7 @@ export default class Screen extends React.Component {
   }
 
   animateOut = animation => {
-    const { type, duration, easing } = Animation.withDefault({ ...this.props.animation, ...animation })
+    const { type, duration, easing, useNativeDriver } = Animation.withDefault({ ...this.props.animation, ...animation })
     if (type === 'none') return Promise.resolve()
     return this.view.transitionTo(Animation.start(type), duration, easing)
   }
@@ -19,8 +19,9 @@ export default class Screen extends React.Component {
   render = () => {
     const { type } = Animation.withDefault(this.props.animation)
     const style = { ...styles.screen, ...Animation.start(type) }
+    const useNativeDriver = Animation.useNativeDriver(type)
     return (
-      <Animatable.View style={style} ref={view => (this.view = view)} useNativeDriver={true}>
+      <Animatable.View style={style} ref={view => (this.view = view)} useNativeDriver={useNativeDriver}>
         {this.props.children}
       </Animatable.View>
     )
