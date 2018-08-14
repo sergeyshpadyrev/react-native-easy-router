@@ -28,7 +28,8 @@ class Router extends React.Component {
       const last = this.state.stack[this.state.stack.length - 1]
       const stack = [...previous, { ...last, methods: { ...methods, id, route, params }, screen }]
 
-      this.setStack({ stack }, () => screen.animateIn().then(onActionFinished))
+      this.setTransition(screen.props.animation, this.state.stack, stack)
+      screen.animateIn().then(() => { this.setStack({ stack }, onActionFinished, true) })
     }
     const screen = (
       <Screen animation={animation} animator={this.animator} key={id} ref={screenReferenceHandler}>
@@ -51,12 +52,18 @@ class Router extends React.Component {
     this._isMounted = false
   }
 
-  setStack = ({ stack }, onFinish) => {
+  setStack = ({ stack }, onFinish, toProps) => {
     if (this._isMounted) {
       this.setState({ stack }, onFinish)
-      if (onFinish && this.props.onStackChange) {
+      if (toProps && this.props.onStackChange) {
         this.props.onStackChange(stack.map(route => route.methods))
       }
+    }
+  }
+
+  setTransition = (animation, from, to) => {
+    if (this.props.onBeforeStackChange) {
+      this.props.onBeforeStackChange(animation, from.map(route => route.methods), to.map(route => route.methods))
     }
   }
 

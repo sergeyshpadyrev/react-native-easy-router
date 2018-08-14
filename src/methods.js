@@ -9,9 +9,12 @@ export default class Router {
       router.actions.add(onFinish => {
         if (router.state.stack.length === 0) return
 
-        router.state.stack[router.state.stack.length - 1].screen
+        const newStack = router.state.stack.slice(0, -1)
+        const { screen } = router.state.stack[router.state.stack.length - 1]
+        router.setTransition(animation || screen.props.animation, router.state.stack, newStack)
+        screen
           .animateOut(animation)
-          .then(() => router.setStack({ stack: router.state.stack.slice(0, -1) }, onFinish))
+          .then(() => router.setStack({ stack: newStack }, onFinish, true))
       })
 
     this.push = forAllRoutes(route => (params, animation) =>
@@ -23,7 +26,8 @@ export default class Router {
         const removeReplacedScreen = () =>
           router.setStack(
             { stack: [...router.state.stack.slice(0, -2), router.state.stack[router.state.stack.length - 1]] },
-            onFinish
+            onFinish,
+            true
           )
         router.addScreen(route, params, animation, removeReplacedScreen, 1)
       })
@@ -32,7 +36,7 @@ export default class Router {
     this.reset = forAllRoutes(route => (params, animation) =>
       router.actions.add(onFinish => {
         const removeAllScreens = () =>
-          router.setStack({ stack: [router.state.stack[router.state.stack.length - 1]] }, onFinish)
+          router.setStack({ stack: [router.state.stack[router.state.stack.length - 1]] }, onFinish, true)
         router.addScreen(route, params, animation, removeAllScreens, router.state.stack.length)
       })
     )
