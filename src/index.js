@@ -29,14 +29,14 @@ class Router extends React.Component {
       const stack = [...previous, { ...last, methods: { ...methods, id, route, params }, screen }]
 
       this.setTransition(screen.props.animation, this.state.stack, stack)
-      screen.animateIn().then(() => { this.setStack({ stack }, onActionFinished, true) })
+      screen.animateIn().then(() => { this.setStack({ stack }, onActionFinished) })
     }
     const screen = (
       <Screen animation={animation} animator={this.animator} key={id} ref={screenReferenceHandler}>
         <Route router={this.methods} {...params} />
       </Screen>
     )
-    this.setStack({ stack: [...this.state.stack, screen] })
+    this.setStack({ stack: [...this.state.stack, screen] }, undefined, true)
   }
 
   componentDidMount = () => {
@@ -52,10 +52,10 @@ class Router extends React.Component {
     this._isMounted = false
   }
 
-  setStack = ({ stack }, onFinish, toProps) => {
+  setStack = ({ stack }, onFinish, skipProps) => {
     if (this._isMounted) {
       this.setState({ stack }, onFinish)
-      if (toProps && this.props.onStackChange) {
+      if (!skipProps && this.props.onStackChange) {
         this.props.onStackChange(stack.map(route => route.methods))
       }
     }
