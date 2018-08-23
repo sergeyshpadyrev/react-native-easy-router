@@ -63,7 +63,7 @@ class Router extends React.Component {
 
   setTransition = (animation, from, to) => {
     if (this.props.onBeforeStackChange) {
-      this.props.onBeforeStackChange(animation, from.map(route => route.methods), to.map(route => route.methods))
+      this.props.onBeforeStackChange(animation, from.map(route => route.methods).filter(route => route), to.map(route => route.methods))
     }
   }
 
