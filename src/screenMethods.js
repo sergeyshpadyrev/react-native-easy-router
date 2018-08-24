@@ -10,7 +10,7 @@ export default class ScreenMethods {
         const removeLast = () => {
           const lastScreen = router.state.stack[router.state.stack.length - 1].screen
           const onAnimationFinish = () => router.setState({ stack: router.state.stack.slice(0, -1) }, onFinish)
-          lastScreen.animateOut(animation).then(onAnimationFinish)
+          lastScreen.animateOut(animation, router.state.stack).then(onAnimationFinish)
         }
 
         const stack = [...router.state.stack.slice(0, index + 1), router.state.stack[router.state.stack.length - 1]]
