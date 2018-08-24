@@ -2,13 +2,12 @@ import * as Animatable from 'react-native-animatable-promise'
 import React from 'react'
 import styles from './styles'
 
-const transitions = (transition, previous, stack) => {
-  return stack.map(({ screen }, i) => {
+const transitions = (transition, previous, stack) =>
+  stack.map(({ screen }, i) => {
     if (i === stack.length - 1) return transition
     if (i === stack.length - 2) return previous(screen)
     return screen.transparent()
   })
-}
 
 export default class Screen extends React.Component {
   animateIn = stack => {
