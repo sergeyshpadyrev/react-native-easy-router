@@ -12,9 +12,7 @@ export default class Router {
         const newStack = router.state.stack.slice(0, -1)
         const { screen } = router.state.stack[router.state.stack.length - 1]
         router.setTransition(animation || screen.props.animation, router.state.stack, newStack)
-        screen
-          .animateOut(animation)
-          .then(() => router.setStack({ stack: newStack }, onFinish))
+        screen.animateOut(animation, router.state.stack).then(() => router.setStack({ stack: newStack }, onFinish))
       })
 
     this.push = forAllRoutes(route => (params, animation) =>
