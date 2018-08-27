@@ -47,6 +47,8 @@ You can see more usage examples in [examples](https://github.com/sergeyshpadyrev
 | initialRoute        | string   | required | initial route name                                   |
 | router              | function |          | function to get router object                        |
 | disableHardwareBack | boolean  |          | don't use Android back button to pop (default false) |
+| onStackChange       | function |          | function called after navigation stack changes       |
+| onBeforeStackChange | function |          | function called before navigation stack changes      |
 
 ```javascript
 // Example
@@ -86,9 +88,10 @@ router.reset.First({value:123}, {type:'top'}).then(() => console.log('Reset'))
 
 | Parameter | Type     | Description                                         |
 | --------- | -------- | --------------------------------------------------- |
-| id        | integer  | Id of route                                         |
+| id        | string   | Id of route                                         |
 | route     | string   | Route name                                          |
 | params    | object   | Parameters passed to screen                         |
+| animation | object   | Animation used to transition to this screen         |
 | pop       | function | Function to pop all screens until this              |
 | replace   | function | Function to replace all screens in stack after this |
 
@@ -146,4 +149,34 @@ The only limitation for custom animations is that the out animation `useNativeDr
 [{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }]}, false]
 // and then pop with animation like that
 [{ opacity: 1}] }, { opacity:0}, true]
+```
+
+#### Responding to stack changes
+
+The `onStackChange` event can be used to update your application state or UI when navigation occurs. It receives a single argument, the new stack
+
+```javascript
+// Example
+
+<Router
+  onStackChange={newStack => {
+    // Dispatch the new navigation stack to a store
+    dispatch({type: 'SET_ROUTER_STACK', payload: newStack})
+  }}
+/>
+```
+
+The `onBeforeStackChange` event can be used to synchronise your application UI with router transitions. It receives 3 arguments: the transition animation, the current stack and the target stack
+
+```javascript
+// Example
+
+<Router
+  onBeforeStackChange={(animation, oldStack, newStack) => {
+    // Assign the transition animation and screens to state
+    const fromScreen = fromStack[fromStack.length - 1].route
+    const toScreen = toStack[toStack.length - 1].route
+    this.setState({animation, fromScreen, toScreen})
+  }}
+/>
 ```
