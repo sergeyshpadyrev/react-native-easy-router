@@ -8,6 +8,8 @@ import ScreenMethods from './screenMethods'
 import styles from './styles'
 import { View } from 'react-native'
 
+let counter = 0
+
 class Router extends React.Component {
   actions = new Actions()
   animator = new Animator(this.props.animations)
@@ -18,7 +20,8 @@ class Router extends React.Component {
 
   addScreen = (route, params, animation, onActionFinished, idShift = 0) => {
     const index = this.state.stack.length - idShift
-    const id = `${index}-${route}-${parseInt(Math.random() * 10000)}`
+    const id = `${index}-${route}-${counter}`
+    counter += 1
     const Route = this.props.routes[route]
     const screenReferenceHandler = screen => {
       if (!screen) return
