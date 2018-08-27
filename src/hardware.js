@@ -7,8 +7,11 @@ export default class HardwareBack {
   }
 
   handle = () => {
-    if (this.methods.stack.length > 1) this.methods.pop()
-    return true
+    if (this.methods.stack.length > 1) {
+      this.methods.pop()
+      return true
+    }
+    return false
   }
 
   subscribe = () => {

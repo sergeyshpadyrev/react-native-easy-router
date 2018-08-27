@@ -44,4 +44,8 @@ export default class Animator {
   start = this.getTypeProperty(0)
   end = this.getTypeProperty(1)
   useNativeDriver = this.getTypeProperty(2)
+  shouldFade = type => {
+    const { opacity, transform } = this.types[type][0]
+    return opacity === undefined || transform !== undefined
+  }
 }

@@ -2,21 +2,38 @@ import * as Animatable from 'react-native-animatable-promise'
 import React from 'react'
 import styles from './styles'
 
+const transitions = (transition, previous, stack) =>
+  stack.map(({ screen }, i) => {
+    if (i === stack.length - 1) return transition
+    if (i === stack.length - 2) return previous(screen)
+    return screen.transparent()
+  })
+
 export default class Screen extends React.Component {
-  animateIn = () => {
+  animateIn = stack => {
     const { type, duration, easing } = this.props.animator.withDefault(this.props.animation)
     if (type === 'none') return Promise.resolve()
-    return this.view.transitionTo(this.props.animator.end(type), duration, easing)
+    const transition = this.view.transitionTo(this.props.animator.end(type), duration, easing)
+    if (!this.props.animator.shouldFade(type)) return transition
+    return Promise.all(transitions(transition, screen => screen.fadeOut(duration, easing), stack))
   }
 
-  animateOut = animation => {
-    const { type, duration, easing, useNativeDriver } = this.props.animator.withDefault({
+  animateOut = (animation, stack) => {
+    const { type, duration, easing } = this.props.animator.withDefault({
       ...this.props.animation,
       ...animation
     })
     if (type === 'none') return Promise.resolve()
-    return this.view.transitionTo(this.props.animator.start(type), duration, easing)
+    const transition = this.view.transitionTo(this.props.animator.start(type), duration, easing)
+    if (!this.props.animator.shouldFade(type)) return transition
+    return Promise.all(transitions(transition, screen => screen.fadeIn(duration, easing), stack))
   }
+
+  fadeIn = (duration, easing) => this.view.transitionTo(this.props.animator.end('fade'), duration, easing)
+
+  fadeOut = (duration, easing) => this.view.transitionTo(this.props.animator.start('fade'), duration, easing)
+
+  transparent = () => this.view.transitionTo({ opacity: 0 }, 0)
 
   render = () => {
     const { type } = this.props.animator.withDefault(this.props.animation)
