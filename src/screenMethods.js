@@ -21,11 +21,10 @@ export default class ScreenMethods {
 
     this.replace = forAllRoutes(route => (params, animation) =>
       router.actions.add(onFinish => {
-        const onAdd = () => {
-          const stack = [...router.state.stack.slice(0, index), router.state.stack[router.state.stack.length - 1]]
-          router.setStack({ stack }, onFinish)
-        }
-        router.addScreen(route, params, animation, onAdd, router.state.stack.length - index)
+        const nextStack = stack => [...stack.slice(0, index), stack[stack.length - 1]]
+        const onAdd = stack =>
+          router.setStack({ stack: nextStack(stack) }, onFinish)
+        router.addScreen(route, params, animation, onAdd, router.state.stack.length - index, nextStack)
       })
     )
   }
