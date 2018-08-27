@@ -16,7 +16,7 @@ class Router extends React.Component {
   methods = new Methods(this)
   hardware = new Hardware(this.methods, this.props.disableHardwareBack)
 
-  addScreen = (route, params, animation, onActionFinished, idShift = 0) => {
+  addScreen = (route, params, animation, onActionFinished, idShift = 0, nextStack = undefined) => {
     const index = this.state.stack.length - idShift
     const id = `${index}-${route}-${parseInt(Math.random() * 10000)}`
     const Route = this.props.routes[route]
@@ -28,8 +28,8 @@ class Router extends React.Component {
       const last = this.state.stack[this.state.stack.length - 1]
       const stack = [...previous, { ...last, methods: { ...methods, id, route, params }, screen }]
 
-      this.setTransition(screen.props.animation, this.state.stack, stack)
-      screen.animateIn(stack).then(() => this.setStack({ stack }, onActionFinished))
+      this.setTransition(screen.props.animation, this.state.stack, nextStack ? nextStack(stack) : stack)
+      screen.animateIn(stack).then(() => nextStack ? onActionFinished(stack) : this.setStack({ stack }, onActionFinished))
     }
     const screen = (
       <Screen animation={animation} animator={this.animator} key={id} ref={screenReferenceHandler}>
