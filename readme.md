@@ -88,9 +88,10 @@ router.reset.First({value:123}, {type:'top'}).then(() => console.log('Reset'))
 
 | Parameter | Type     | Description                                         |
 | --------- | -------- | --------------------------------------------------- |
-| id        | integer  | Id of route                                         |
+| id        | string   | Id of route                                         |
 | route     | string   | Route name                                          |
 | params    | object   | Parameters passed to screen                         |
+| animation | object   | Animation used to transition to this screen         |
 | pop       | function | Function to pop all screens until this              |
 | replace   | function | Function to replace all screens in stack after this |
 
