@@ -1,8 +1,3 @@
 {
-  "expo": {
-    "name": "07_reset",
-    "slug": "reset",
-    "sdkVersion": "28.0.0",
-    "version": "1.0.0"
-  }
+  "name": "reset"
 }
