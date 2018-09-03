@@ -1,0 +1,3 @@
+rootProject.name = 'customAnimation'
+
+include ':app'
