@@ -86,6 +86,7 @@ declare module "react-native-easy-router" {
         };
         initialRoute: string;
         router?: (router: Router) => void;
+        style?: ViewStyle;
         disableHardwareBack?: boolean;
         onStackChange?: (stack: RouterStack) => void;
         onBeforeStackChange?: (animation: Animation, fromStack: RouterStack, toStack: RouterStack) => void;
