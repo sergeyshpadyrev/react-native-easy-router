@@ -71,7 +71,7 @@ class Router extends React.Component {
     )
   }
 
-  render = () => <View style={styles.router}>{this.state.stack}</View>
+  render = () => <View pointerEvents="box-none" style={{...this.props.style, ...styles.router}}>{this.state.stack}</View>
 }
 
 export default Router
