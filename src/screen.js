@@ -40,7 +40,7 @@ export default class Screen extends React.Component {
     const style = { ...styles.screen, ...this.props.animator.start(type) }
     const useNativeDriver = this.props.animator.useNativeDriver(type)
     return (
-      <Animatable.View style={style} ref={view => (this.view = view)} useNativeDriver={useNativeDriver}>
+      <Animatable.View pointerEvents="box-none" style={style} ref={view => (this.view = view)} useNativeDriver={useNativeDriver}>
         {this.props.children}
       </Animatable.View>
     )
