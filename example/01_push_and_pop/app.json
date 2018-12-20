@@ -1,8 +1,3 @@
 {
-  "expo": {
-    "name": "01_push_and_pop",
-    "slug": "push_and_pop",
-    "sdkVersion": "28.0.0",
-    "version": "1.0.0"
-  }
+  "name": "pushAndPop"
 }

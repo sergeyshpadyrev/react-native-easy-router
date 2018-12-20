@@ -1,8 +1,3 @@
 {
-  "expo": {
-    "name": "04_pop_to",
-    "slug": "pop_to",
-    "sdkVersion": "28.0.0",
-    "version": "1.0.0"
-  }
+  "name": "popTo"
 }
