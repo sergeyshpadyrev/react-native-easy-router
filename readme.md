@@ -106,6 +106,21 @@ router.stack[0].pop({ type: 'bottom' }).then(() => console.log('Popped to route'
 router.stack[0].replace.Second().then(() => console.log('Replaced'))
 ```
 
+#### Screen elements
+
+Each Screen element will have it's 'id' property set to match the Id of the route. This allows
+a given instance of a screen to check if it is the current top level screen on the stack.
+
+Example code:
+```
+isActive = () => {
+  const { router, id } = this.props;
+  const topScreen = router.stack[router.stack.length - 1];
+
+  return (topScreen.id === id);
+};
+```
+
 #### Animations
 
 | Property | Available values                                                                                      |
