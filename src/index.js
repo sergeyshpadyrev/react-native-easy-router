@@ -36,7 +36,7 @@ class Router extends React.Component {
     }
     const screen = (
       <Screen animation={animation} animator={this.animator} key={id} ref={screenReferenceHandler}>
-        <Route router={this.methods} {...params} />
+        <Route id={id} router={this.methods} {...params} />
       </Screen>
     )
     this.setStack({ stack: [...this.state.stack, screen] }, undefined, true)
