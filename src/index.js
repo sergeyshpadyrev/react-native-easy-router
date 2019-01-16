@@ -104,7 +104,7 @@ class Router extends React.Component {
           this.methods.pop();
       }}
       config={{
-        velocityThreshold: 0.3,
+        velocityThreshold: 5,
         directionalOffsetThreshold: 80,
         detectSwipeUp: false,
         detectSwipeDown: false,
