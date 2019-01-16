@@ -3,11 +3,11 @@ import Animator from './animation'
 import Hardware from './hardware'
 import GestureRecognizer from 'react-native-swipe-gestures'
 import Methods from './methods'
+import {Platform, View } from 'react-native'
 import React from 'react'
 import Screen from './screen'
 import ScreenMethods from './screenMethods'
 import styles from './styles'
-import { View } from 'react-native'
 
 let counter = 0
 
@@ -74,7 +74,7 @@ class Router extends React.Component {
 
   render = () =>  ( <GestureRecognizer
         onSwipeRight={() => {
-          if (!this.props.disableHardwareBack) this.methods.pop()
+          if (!this.props.disableHardwareBack && Platform.OS === 'ios') this.methods.pop()
         }}
         config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }}
         style={{ flex: 1}}
