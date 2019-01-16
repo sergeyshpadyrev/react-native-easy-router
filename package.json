@@ -1,11 +1,11 @@
 {
   "name": "react-native-easy-router",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "dependencies": {
     "react-native-animatable-promise": "^1.2.4",
-    "react-native-swipe-gestures": "^1.0.3"
+    "react-native-swipe-gestures": "git://github.com/thegamenicorus/react-native-swipe-gestures.git"
   },
   "repository": {
     "type": "git",
