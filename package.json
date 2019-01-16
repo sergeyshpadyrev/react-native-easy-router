@@ -1,16 +1,21 @@
 {
   "name": "react-native-easy-router",
-  "version": "2.6.2",
+  "version": "2.7.0",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "dependencies": {
-    "react-native-animatable-promise": "^1.2.4"
+    "react-native-animatable-promise": "^1.2.4",
+    "react-native-swipe-gestures": "^1.0.3"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sergeyshpadyrev/react-native-easy-router.git"
   },
-  "keywords": ["react", "react-native", "router"],
+  "keywords": [
+    "react",
+    "react-native",
+    "router"
+  ],
   "author": "Sergey Shpadyrev",
   "license": "MIT",
   "bugs": {

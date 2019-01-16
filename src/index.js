@@ -1,6 +1,7 @@
 import Actions from './actions'
 import Animator from './animation'
 import Hardware from './hardware'
+import GestureRecognizer from 'react-native-swipe-gestures'
 import Methods from './methods'
 import React from 'react'
 import Screen from './screen'
@@ -36,7 +37,7 @@ class Router extends React.Component {
     }
     const screen = (
       <Screen animation={animation} animator={this.animator} key={id} ref={screenReferenceHandler}>
-        <Route id={id} router={this.methods} {...params} />
+        <Route router={this.methods} {...params} />
       </Screen>
     )
     this.setStack({ stack: [...this.state.stack, screen] }, undefined, true)
@@ -71,7 +72,14 @@ class Router extends React.Component {
     )
   }
 
-  render = () => <View pointerEvents="box-none" style={{...this.props.style, ...styles.router}}>{this.state.stack}</View>
+  render = () =>  ( <GestureRecognizer
+        onSwipeRight={() => {
+          if (!this.props.disableHardwareBack) this.methods.pop()
+        }}
+        config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }}
+        style={{ flex: 1}}
+      ><View pointerEvents="box-none" style={{...this.props.style, ...styles.router}}>{this.state.stack}</View>
+      </GestureRecognizer>)
 }
 
 export default Router

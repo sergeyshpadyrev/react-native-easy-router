@@ -46,7 +46,7 @@ You can see more usage examples in [examples](https://github.com/sergeyshpadyrev
 | routes              | object   | required | route components keyed by route name                 |
 | initialRoute        | string   | required | initial route name                                   |
 | router              | function |          | function to get router object                        |
-| disableHardwareBack | boolean  |          | don't use Android back button to pop (default false) |
+| disableHardwareBack | boolean  |          | disable Android back button and iOS swipe back (default false) |
 | onStackChange       | function |          | function called after navigation stack changes       |
 | onBeforeStackChange | function |          | function called before navigation stack changes      |
 
