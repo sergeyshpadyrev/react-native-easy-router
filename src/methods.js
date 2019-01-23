@@ -7,7 +7,7 @@ export default class Router {
 
     this.pop = animation =>
       router.actions.add(onFinish => {
-        if (router.state.stack.length === 1) return
+        if (router.state.stack.length === 1) return onFinish()
 
         const newStack = router.state.stack.slice(0, -1)
         const { screen } = router.state.stack[router.state.stack.length - 1]

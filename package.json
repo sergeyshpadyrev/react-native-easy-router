@@ -1,6 +1,6 @@
 {
   "name": "react-native-easy-router",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "dependencies": {
