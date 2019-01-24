@@ -23,7 +23,10 @@ export default class Screen extends React.Component {
       ...this.props.animation,
       ...animation
     })
-    if (type === 'none') return Promise.resolve()
+    if (type === 'none') {
+      if (stack.length >= 2 && stack[stack.length - 1].props.animation.type === 'none') stack[stack.length - 2].screen.fadeIn()
+      return Promise.resolve()
+    }
     const transition = this.view.transitionTo(this.props.animator.start(type), duration, easing)
     if (!this.props.animator.shouldFade(type)) return transition
     return Promise.all(transitions(transition, screen => screen.fadeIn(duration, easing), stack))
