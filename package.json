@@ -5,7 +5,7 @@
   "types": "src/index.d.ts",
   "dependencies": {
     "react-native-animatable-promise": "^1.2.4",
-    "react-native-swipe-gestures": "git://github.com/thegamenicorus/react-native-swipe-gestures.git"
+    "react-native-swipe-gestures": "thegamenicorus/react-native-swipe-gestures.git"
   },
   "repository": {
     "type": "git",
