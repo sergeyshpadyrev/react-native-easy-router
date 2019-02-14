@@ -15,7 +15,7 @@ export default class Screen extends React.Component {
     if (type === 'none') return Promise.resolve()
     const transition = this.view.transitionTo(this.props.animator.end(type), duration, easing)
     if (!this.props.animator.shouldFade(type)) return transition
-    return Promise.all(transitions(transition, screen => screen.fadeOut(duration, easing), stack))
+    return Promise.all(transitions(transition, screen => screen.fadeOut(duration, easing, type), stack))
   }
 
   animateOut = (animation, stack) => {
@@ -29,12 +29,12 @@ export default class Screen extends React.Component {
     }
     const transition = this.view.transitionTo(this.props.animator.start(type), duration, easing)
     if (!this.props.animator.shouldFade(type)) return transition
-    return Promise.all(transitions(transition, screen => screen.fadeIn(duration, easing), stack))
+    return Promise.all(transitions(transition, screen => screen.fadeIn(duration, easing, type), stack))
   }
 
-  fadeIn = (duration, easing) => this.view.transitionTo(this.props.animator.end('fade'), duration, easing)
+  fadeIn = (duration, easing, type) => this.view.transitionTo(this.props.animator.prevIn(type) || this.props.animator.end('fade'), duration, easing)
 
-  fadeOut = (duration, easing) => this.view.transitionTo(this.props.animator.start('fade'), duration, easing)
+  fadeOut = (duration, easing, type) => this.view.transitionTo(this.props.animator.prevOut(type) || this.props.animator.start('fade'), duration, easing)
 
   transparent = () => this.view.transitionTo({ opacity: 0 }, 0)
 

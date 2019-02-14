@@ -48,7 +48,10 @@ declare module "react-native-easy-router" {
 
     export type AnimationPosition = ViewStyle;
 
-    export type CustomAnimation = [AnimationPosition, AnimationPosition, boolean];
+    export type CustomAnimation =
+      | [AnimationPosition, AnimationPosition, boolean]
+      | [AnimationPosition, AnimationPosition, boolean, AnimationPosition]
+      | [AnimationPosition, AnimationPosition, boolean, AnimationPosition, AnimationPosition];
 
     export interface CustomAnimations {
         [animation: string]: CustomAnimation;

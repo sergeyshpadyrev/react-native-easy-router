@@ -22,7 +22,13 @@ const Screen = ({ children, color }) => (
 
 const { width, height } = Dimensions.get('window')
 const animations = {
-  'skew-fade': [{ transform: [{ skewX: '90deg' }], opacity: 0 }, { transform: [{ skewX: '0deg' }], opacity: 1 }, false]
+  'skew-fade': [
+    { transform: [{ skewX: '90deg' }], opacity: 0 },
+    { transform: [{ skewX: '0deg' }], opacity: 1 },
+    false,
+    { transform: [{ translateX: -width / 3 }], opacity: 0 },
+    { transform: [{ translateX: 0 }], opacity: 1 },
+  ]
 }
 
 const Screen1 = ({ router }) => (
