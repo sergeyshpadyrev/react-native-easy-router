@@ -55,7 +55,7 @@ You can see more usage examples in [examples](https://github.com/sergeyshpadyrev
 
 <Router
   routes={{ First, Second }}
-  initialRoute="first"
+  initialRoute="First"
   router={router => (this.router = router)}
   disableHardwareBack={false}
 />
