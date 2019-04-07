@@ -146,6 +146,8 @@ Also you can pass your custom animation types to router. Where type is array con
 | 0     | Object  | Start position for in animation / end position for out animation |
 | 1     | Object  | Start position for out animation / end position for in animation |
 | 2     | Boolean | Usage of native driver animation                                 |
+| 3     | Object  | (optional) End position for out animation of previous screen     |
+| 4     | Object  | (optional) End position for in animation of previous screen      |
 
 ```javascript
 // Example
