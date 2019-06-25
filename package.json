@@ -2,7 +2,6 @@
   "name": "react-native-easy-router",
   "version": "3.0.0-alpha",
   "main": "src/index.js",
-  "types": "src/index.d.ts",
   "dependencies": {
     "react-native-animatable-promise": "^1.2.4",
     "uuid": "^3.3.2"
