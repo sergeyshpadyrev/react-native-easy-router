@@ -23,14 +23,16 @@ class Navigator extends React.Component {
     inTransition = false
     backHandlers = {}
 
-    updateStack = stack =>
-        new Promise(resolve =>
+    updateStack = stack => {
+        const { stack: previousStack } = this.state
+        return new Promise(resolve =>
             this.setState({ stack }, () => {
                 const { onStackUpdate } = this.props
-                if (onStackUpdate) onStackUpdate(stack)
+                if (onStackUpdate) onStackUpdate(stack, previousStack)
                 resolve()
             })
         )
+    }
 
     navigatorAction = action =>
         new Promise((resolve, reject) => {
