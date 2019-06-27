@@ -146,11 +146,14 @@ class Navigator extends React.Component {
     onBackPress = () => {
         const { stack } = this.state
         const lastStackItemId = stack[stack.length - 1].id
-        if (this.backHandlers.hasOwnProperty(lastStackItemId))
-            return this.backHandlers[lastStackItemId](this.navigator)
+        if (this.backHandlers.hasOwnProperty(lastStackItemId)) {
+            this.backHandlers[lastStackItemId](this.navigator)
+            return true
+        }
 
         const { backHandler } = this.props
         if (backHandler) backHandler(this.navigator)
+        return true
     }
 
     componentWillMount = () => {
