@@ -190,7 +190,7 @@ class Navigator extends React.Component {
             <View
                 key={stackItem.id}
                 pointerEvents={index < stack.length - 1 ? 'none' : undefined}
-                style={screenStyle}
+                style={[screenStyle, { opacity: index < stack.length - 2 ? 0 : 1 }]}
                 ref={ref => (this.renderedScreens[stackItem.id] = ref)}
                 useNativeDriver={true}>
                 <NavigatorScreen
