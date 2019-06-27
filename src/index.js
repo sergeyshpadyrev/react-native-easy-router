@@ -158,10 +158,16 @@ class Navigator extends React.Component {
             'hardwareBackPress',
             this.onBackPress
         )
+
+        const { navigatorRef } = this.props
+        if (!!navigatorRef) navigatorRef(this.navigator)
     }
 
     componentWillUnmount = () => {
         this.androidBackHandler.remove()
+
+        const { navigatorRef } = this.props
+        if (!!navigatorRef) navigatorRef(undefined)
     }
 
     renderScreen = (stackItem, index) => {
