@@ -1,20 +1,27 @@
 {
-  "name": "react-native-easy-router",
-  "version": "3.0.0-beta.2",
-  "main": "src/index.js",
-  "dependencies": {
-    "react-native-animatable-promise": "^1.2.4",
-    "uuid": "^3.3.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sergeyshpadyrev/react-native-easy-router.git"
-  },
-  "keywords": ["react", "react-native", "router", "navigator", "screens"],
-  "author": "Sergey Shpadyrev",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/sergeyshpadyrev/react-native-easy-router/issues"
-  },
-  "homepage": "https://github.com/sergeyshpadyrev/react-native-easy-router#readme"
+    "name": "react-native-easy-router",
+    "version": "3.0.0-beta.3",
+    "main": "src/index.js",
+    "dependencies": {
+        "react-native-animatable-promise": "^1.2.4",
+        "uuid": "^3.3.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sergeyshpadyrev/react-native-easy-router.git"
+    },
+    "keywords": [
+        "react",
+        "react-native",
+        "router",
+        "navigator",
+        "navigation",
+        "screens"
+    ],
+    "author": "Sergey Shpadyrev",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/sergeyshpadyrev/react-native-easy-router/issues"
+    },
+    "homepage": "https://github.com/sergeyshpadyrev/react-native-easy-router#readme"
 }

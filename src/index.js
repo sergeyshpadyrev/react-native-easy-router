@@ -56,7 +56,7 @@ class Navigator extends React.Component {
         })
     navigator = {
         pop: transitionProps => {
-            if (this.state.stack.length === 1) throw new Error("Can't pop the only screen")
+            if (this.state.stack.length === 1) return
 
             return this.navigatorAction(async onFinish => {
                 const screen = this.state.stack[this.state.stack.length - 1]
@@ -149,13 +149,15 @@ class Navigator extends React.Component {
         const { stack } = this.state
         const lastStackItemId = stack[stack.length - 1].id
         if (this.backHandlers.hasOwnProperty(lastStackItemId)) {
-            this.backHandlers[lastStackItemId](this.navigator)
-            return true
+            return this.backHandlers[lastStackItemId](this.navigator) || stack.length > 1
         }
 
         const { backHandler } = this.props
-        if (backHandler) backHandler(this.navigator)
-        return true
+        if (backHandler) {
+            return backHandler(this.navigator) || stack.length > 1
+        }
+
+        return stack.length > 1
     }
 
     componentWillMount = () => {
