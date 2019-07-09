@@ -47,7 +47,7 @@ You can look at [example](https://github.com/sergeyshpadyrev/react-native-easy-r
 
 ## Documentation
 
-### Navigator params
+### Navigator properties
 
 #### screens (_required_)
 Screen components keyed by screen name
@@ -59,7 +59,7 @@ _Example_:
 
 #### initialStack (_required_)
 
-Initial stack can be a first screen name, an array of screen names or even array of screen objects that are are returned from `navigator.stack`.
+Initial stack can be a first screen name, an array of screen names or even array of screen objects that are are returned from `navigator.stack` or `onStackUpdate`.
 
 _Examples_:
 ```
@@ -72,4 +72,30 @@ or
 or
 ```
 <Navigator initialStack={[{screen: 'First', props: {name: 'John'}, transitionProps: {animation: 'left'}}]}/>
+```
+
+#### onStackUpdate
+Callback that is called when stack updates
+
+_Example_:
+```
+<Navigator onStackUpdate={(stack, previousStack) => console.log(stack, previousStack)}/>
+```
+
+#### backHandler
+_Default value_: `navigator => navigator.pop()`
+Function that is called when user presses back button on Android or makes swipe back on IOS
+If you return `false` from this function on Android app will be minimized
+
+_Example_:
+```
+<Navigator backHandler={navigator => navigator.pop()}/>
+```
+
+#### navigatorRef
+Callback that is called on navigator initialization with `navigator` reference so you can manage your navigator from outside.
+
+_Example_:
+```
+<Navigator navigatorRef={ref => (this.navigator = ref)}/>
 ```
