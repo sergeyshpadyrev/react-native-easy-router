@@ -85,7 +85,7 @@ _Example_:
 #### backHandler
 _Default value_: `navigator => navigator.pop()`
 Function that is called when user presses back button on Android or makes swipe back on IOS.
-If you return `false` from this function on Android app will be minimized
+If you return `false` from this function on Android app will be minimized.
 
 _Example_:
 ```js
@@ -120,11 +120,77 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 Navigator passes `navigator` object to every screen. With this object you can manage your screens. Also you can get this object with `navigatorRef`.
 
 #### push(screen, props, transitionProps)
-Pushes new screen to the stack
+Pushes new screen to the stack. Returns `Promise` that is resolved after transition finishes.
 
 _Example_:
 ```js
-  // Stack: First
+  // Stack before: First
   navigator.push('Second', {email: 'john@gmail.com'}, {animation: 'bottom'})
-  // Stack: First, Second
+  // Stack after: First, Second
+```
+
+#### pop(transitionProps)
+Pops last screen from the stack. If `transitionProps` are not provided uses those transitionProps that this screen was pushed with. Returns `Promise` that is resolved after transition finishes.
+
+_Example_:
+```js
+  // Stack before: First, Second
+  navigator.pop({animation: 'left'})
+  // Stack after: First
+```
+
+#### reset(screen, props, transitionProps)
+Resets the whole stack to a new screen. Returns `Promise` that is resolved after transition finishes.
+
+_Example_:
+```js
+  // Stack before: First, Second
+  navigator.reset('Third', {name: 'John'}, {animation: 'fade'})
+  // Stack after: Third
+```
+
+#### stack
+Returns the stack
+
+_Example_:
+```js
+  // Stack before: First, Second
+  console.log(navigator.stack) // [{id: 'some-id', screen: 'First', props: {name: 'John'}, transitionProps: {animation: 'left', duration: 500, easing: 'ease-in-out'}}]
+```
+
+#### popTo(screenId, transitionProps)
+Pops all screens after the certain screen. If `transitionProps` are not provided uses those transitionProps that this screen was pushed with. Returns `Promise` that is resolved after transition finishes.
+
+_Example_:
+```js
+  // Stack before: First, Second, Third, Fourth
+  navigator.popTo(navigator.stack[1].id)
+  // Stack after: First, Second
+```
+
+#### resetFrom(screenId, screen, props, transitionProps)
+Resets the stack after the certain screen. Returns `Promise` that is resolved after transition finishes.
+
+_Example_:
+```js
+  // Stack before: First, Second, Third, Fourth
+  navigator.resetFrom(navigator.stack[1].id, 'Fifth', {age: 18})
+  // Stack after: First, Second, Fifth
+```
+
+#### register/unregisterBackHandler
+
+If you want to handle Android hardware back press and IOS swipe back on the certain screen you can use this methods. If you return `false` from callback function on Android app will be minimized.
+
+_Example_:
+```js
+  componentDidMount = () => {
+      this.props.navigator.registerBackHandler(this.onBack)
+  }
+
+  componentWillUnmount = () => {
+      this.props.navigator.unregisterBackHandler()
+  }
+
+  onBack = navigator => navigator.pop()
 ```
