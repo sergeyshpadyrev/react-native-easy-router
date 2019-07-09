@@ -12,3 +12,34 @@ React Native Easy Router is an easy-to-use and performant screen navigation libr
 ```
 npm install --save react-native-easy-router
 ```
+
+## Usage
+
+```
+import { AppRegistry, Text, View } from 'react-native'
+import { name } from './app.json'
+import React from 'react'
+import Navigator from 'react-native-easy-router'
+
+const First = ({ navigator }) => (
+    <View
+        style={{ alignItems: 'center', backgroundColor: 'white', flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+        <Text>First screen</Text>
+        <Text onPress={() => navigator.push('Second', { name: 'John' })}>Go forward</Text>
+    </View>
+)
+
+const Second = ({ navigator, name }) => (
+    <View
+        style={{ alignItems: 'center', backgroundColor: 'pink', flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+        <Text>Second screen</Text>
+        <Text>Hello {name}!</Text>
+        <Text onPress={() => navigator.pop()}>Go back</Text>
+    </View>
+)
+
+const Application = () => <Navigator screens={{ First, Second }} initialStack='First' />
+
+AppRegistry.registerComponent(name, () => Application)
+
+```
