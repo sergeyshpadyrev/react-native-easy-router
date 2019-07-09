@@ -200,7 +200,7 @@ _Example_:
 #### animation
 _Default value_: `'right'`
 
-One of default animations: `right`, `left`, `top`, `bottom`, `none`, `fade` or one of custom animations provided to navigator by `animations` property.
+One of default animations: `right`, `left`, `top`, `bottom`, `none`, `fade`. Or one of custom animations provided to navigator by `animations` property.
 
 #### duration
 _Default value_: `250`
