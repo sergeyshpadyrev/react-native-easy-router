@@ -52,18 +52,9 @@ You can look at [example](https://github.com/sergeyshpadyrev/react-native-easy-r
 #### screens (_required_)
 Screen components keyed by screen name
 
-<<<<<<< HEAD
-<Router
-  routes={{ First, Second }}
-  initialRoute="First"
-  router={router => (this.router = router)}
-  disableHardwareBack={false}
-/>
-=======
 _Example_:
 ```js
 <Navigator screens={{ Welcome: ({navigator}) => <View><Text>Welcome</Text></View> }}/>
->>>>>>> v3
 ```
 
 #### initialStack (_required_)
@@ -180,22 +171,12 @@ _Example_:
 #### resetFrom(screenId, screen, props, transitionProps)
 Resets the stack after the certain screen. Returns `Promise` that is resolved after transition finishes.
 
-<<<<<<< HEAD
-| Index | Type    | Description                                                      |
-| ----- | ------- | ---------------------------------------------------------------- |
-| 0     | Object  | Start position for in animation / end position for out animation |
-| 1     | Object  | Start position for out animation / end position for in animation |
-| 2     | Boolean | Usage of native driver animation                                 |
-| 3     | Object  | (optional) End position for out animation of previous screen     |
-| 4     | Object  | (optional) End position for in animation of previous screen      |
-=======
 _Example_:
 ```js
   // Stack before: First, Second, Third, Fourth
   navigator.resetFrom(navigator.stack[1].id, 'Fifth', {age: 18})
   // Stack after: First, Second, Fifth
 ```
->>>>>>> v3
 
 #### register/unregisterBackHandler
 
