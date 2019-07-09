@@ -1,0 +1,17 @@
+{
+    "scripts": {
+        "android": "node node_modules/react-native/local-cli/cli.js run-android",
+        "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
+        "start": "node node_modules/react-native/local-cli/cli.js start"
+    },
+    "dependencies": {
+        "react": "16.8.3",
+        "react-native": "0.59.9",
+        "react-native-easy-router": "^3.0.0-beta.2"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.4.5",
+        "@babel/runtime": "^7.4.5",
+        "metro-react-native-babel-preset": "^0.54.1"
+    }
+}
