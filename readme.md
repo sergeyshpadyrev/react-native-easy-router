@@ -194,3 +194,20 @@ _Example_:
 
   onBack = navigator => navigator.pop()
 ```
+
+### Transition props
+
+#### animation
+_Default value_: `'right'`
+
+One of default animations: `right`, `left`, `top`, `bottom`, `none`, `fade` or one of custom animations provided to navigator by `animations` property.
+
+#### duration
+_Default value_: `250`
+
+Duration of transition in milliseconds. Not applied to `none` animation.
+
+#### easing
+_Default value_: `'ease-in-out'`
+
+One of easings from [this table](https://github.com/oblador/react-native-animatable#properties). Not applied to `none` animation.
