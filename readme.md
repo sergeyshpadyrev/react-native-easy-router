@@ -54,7 +54,7 @@ Screen components keyed by screen name
 
 _Example_:
 ```js
-<Navigator screens={{ Welcome: ({navigator}) => <View/> }}/>
+<Navigator screens={{ Welcome: ({navigator}) => <View><Text>Welcome</Text></View> }}/>
 ```
 
 #### initialStack (_required_)
@@ -84,7 +84,7 @@ _Example_:
 
 #### backHandler
 _Default value_: `navigator => navigator.pop()`
-Function that is called when user presses back button on Android or makes swipe back on IOS
+Function that is called when user presses back button on Android or makes swipe back on IOS.
 If you return `false` from this function on Android app will be minimized
 
 _Example_:
@@ -93,9 +93,38 @@ _Example_:
 ```
 
 #### navigatorRef
-Callback that is called on navigator initialization with `navigator` reference so you can manage your navigator from outside.
+Callback that is called on navigator initialization with `navigator` reference so you can manage your navigator from the outside.
 
 _Example_:
 ```js
 <Navigator navigatorRef={ref => (this.navigator = ref)}/>
+```
+
+#### animations
+Custom animations that you can use for transitions. Because navigator uses native transitions you can use only 'transform' animations. You can use this animation with any `navigator` method.
+
+_Example_:
+```js
+import { Dimensions } from 'react-native'
+const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
+
+<Navigator animations={{
+  bottomRight: {
+      start: { transform: [{ translateX: windowWidth }, { translateY: windowHeight }] },
+      end: { transform: [{ translateX: 0 }, { translateY: 0 }] }
+  }
+}}/>
+```
+
+### Navigator methods
+Navigator passes `navigator` object to every screen. With this object you can manage your screens. Also you can get this object with `navigatorRef`.
+
+#### push(screen, props, transitionProps)
+Pushes new screen to the stack
+
+_Example_:
+```js
+  // Stack: First
+  navigator.push('Second', {email: 'john@gmail.com'}, {animation: 'bottom'})
+  // Stack: First, Second
 ```
