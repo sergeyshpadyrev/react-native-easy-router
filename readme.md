@@ -43,3 +43,33 @@ const Application = () => <Navigator screens={{ First, Second }} initialStack='F
 AppRegistry.registerComponent(name, () => Application)
 
 ```
+You can look at [example](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/v3/example) for better understanding
+
+## Documentation
+
+### Navigator params
+
+#### screens (_required_)
+Screen components keyed by screen name
+
+_Example_:
+```
+<Navigator screens={{ Welcome: ({navigator}) => <View/> }}/>
+```
+
+#### initialStack (_required_)
+
+Initial stack can be a first screen name, an array of screen names or even array of screen objects that are are returned from `navigator.stack`.
+
+_Examples_:
+```
+<Navigator initialStack='First'/>
+```
+or
+```
+<Navigator initialStack={['First', 'Second']}/>
+```
+or
+```
+<Navigator initialStack={[{screen: 'First', props: {name: 'John'}, transitionProps: {animation: 'left'}}]}/>
+```
