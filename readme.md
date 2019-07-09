@@ -1,5 +1,12 @@
 # React Native Easy Router
 
+[![npm version](https://badge.fury.io/js/react-native-easy-router.svg)](https://badge.fury.io/js/react-native-easy-router)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+React Native Easy Router is an easy-to-use and performant screen navigation library for React Native
+
+**WARNING**: _Versions 2.x.x of this library is already not supported but you can find docs and examples [here](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/v2)_
+
 ## Installation
 
 ```
@@ -8,139 +15,172 @@ npm install --save react-native-easy-router
 
 ## Usage
 
-```javascript
+```js
+import { AppRegistry, Text, View } from 'react-native'
+import { name } from './app.json'
 import React from 'react'
-import Router from 'react-native-easy-router'
-import { Text, View } from 'react-native'
+import Navigator from 'react-native-easy-router'
 
-const First = ({ router }) => (
-  <View style={{ backgroundColor: 'white', flex: 1 }}>
-    <Text>First screen</Text>
-    <Text onPress={() => router.push.Second({ name: 'John' })}>Go forward</Text>
-  </View>
+const First = ({ navigator }) => (
+    <View
+        style={{ alignItems: 'center', backgroundColor: 'white', flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+        <Text>First screen</Text>
+        <Text onPress={() => navigator.push('Second', { name: 'John' })}>Go forward</Text>
+    </View>
 )
 
-const Second = ({ router, name }) => (
-  <View style={{ backgroundColor: 'pink', flex: 1 }}>
-    <Text>Second screen</Text>
-    <Text>Hello {name}!</Text>
-    <Text onPress={() => router.pop()}>Go back</Text>
-  </View>
+const Second = ({ navigator, name }) => (
+    <View
+        style={{ alignItems: 'center', backgroundColor: 'pink', flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+        <Text>Second screen</Text>
+        <Text>Hello {name}!</Text>
+        <Text onPress={() => navigator.pop()}>Go back</Text>
+    </View>
 )
 
-const routes = { First, Second }
-const App = () => <Router routes={routes} initialRoute="First" />
+const Application = () => <Navigator screens={{ First, Second }} initialStack='First' />
 
-export default App
+AppRegistry.registerComponent(name, () => Application)
+
 ```
+You can look at [example](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/v3/example) for better understanding
 
-You can see more usage examples in [examples](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/master/example)
+## Documentation
 
-## API
+### Navigator properties
 
-#### Router properties
+#### screens (_required_)
+Screen components keyed by screen name
 
-| Property            | Type     | Required | Description                                          |
-| ------------------- | -------- | -------- | ---------------------------------------------------- |
-| animations          | object   |          | custom animations                                    |
-| routes              | object   | required | route components keyed by route name                 |
-| initialRoute        | string   | required | initial route name                                   |
-| router              | function |          | function to get router object                        |
-| disableHardwareBack | boolean  |          | disable Android back button and iOS swipe back (default false) |
-| onStackChange       | function |          | function called after navigation stack changes       |
-| onBeforeStackChange | function |          | function called before navigation stack changes      |
-
-```javascript
-// Example
-
+<<<<<<< HEAD
 <Router
   routes={{ First, Second }}
   initialRoute="First"
   router={router => (this.router = router)}
   disableHardwareBack={false}
 />
+=======
+_Example_:
+```js
+<Navigator screens={{ Welcome: ({navigator}) => <View><Text>Welcome</Text></View> }}/>
+>>>>>>> v3
 ```
 
-#### Router functions
+#### initialStack (_required_)
 
-Router object can be found in route component parameters or can be got from `routerRef` property
+Initial stack can be a first screen name, an array of screen names or even array of screen objects that are are returned from `navigator.stack` or `onStackUpdate`.
 
-| Property | Type                                        | Description                                                       |
-| -------- | ------------------------------------------- | ----------------------------------------------------------------- |
-| pop      | function(animation)                         | Pops the last screen                                              |
-| push     | object{key:function(parameters, animation)} | Object of functions to push new screen keyed by route name        |
-| replace  | object{key:function(parameters, animation)} | Object of functions to replace current screen keyed by route name |
-| reset    | object{key:function(parameters, animation)} | Object of functions to reset the whole stack keyed by route name  |
-| stack    | array                                       | List of routes in stack                                           |
-
-All functions return promises. Promise resolves when action finishes
-
-```javascript
-// Example
-
-router.pop({type:'top'}).then(() => console.log('Popped')
-router.push.First({value:123}, {type:'top'}).then(() => console.log('Pushed'))
-router.replace.Second({value:123}, {type:'top'}).then(() => console.log('Replaced'))
-router.reset.First({value:123}, {type:'top'}).then(() => console.log('Reset'))
+_Examples_:
+```js
+<Navigator initialStack='First'/>
+```
+or
+```js
+<Navigator initialStack={['First', 'Second']}/>
+```
+or
+```js
+<Navigator initialStack={[{screen: 'First', props: {name: 'John'}, transitionProps: {animation: 'left'}}]}/>
 ```
 
-#### Router stack element
+#### onStackUpdate
+Callback that is called when stack updates
 
-| Parameter | Type     | Description                                         |
-| --------- | -------- | --------------------------------------------------- |
-| id        | string   | Id of route                                         |
-| route     | string   | Route name                                          |
-| params    | object   | Parameters passed to screen                         |
-| animation | object   | Animation used to transition to this screen         |
-| pop       | function | Function to pop all screens until this              |
-| replace   | function | Function to replace all screens in stack after this |
-
-```javascript
-// Example
-
-console.log(router.stack[0].id)
-console.log(router.stack[0].route)
-console.log(router.stack[0].params)
-
-router.stack[0].pop({ type: 'bottom' }).then(() => console.log('Popped to route'))
-router.stack[0].replace.Second().then(() => console.log('Replaced'))
+_Example_:
+```js
+<Navigator onStackUpdate={(stack, previousStack) => console.log(stack, previousStack)}/>
 ```
 
-#### Screen elements
+#### backHandler
+_Default value_: `navigator => navigator.pop()`
+Function that is called when user presses back button on Android or makes swipe back on IOS.
+If you return `false` from this function on Android app will be minimized.
 
-Each Screen element will have it's 'id' property set to match the Id of the route. This allows
-a given instance of a screen to check if it is the current top level screen on the stack.
-
-Example code:
-```
-isActive = () => {
-  const { router, id } = this.props;
-  const topScreen = router.stack[router.stack.length - 1];
-
-  return (topScreen.id === id);
-};
+_Example_:
+```js
+<Navigator backHandler={navigator => navigator.pop()}/>
 ```
 
-#### Animations
+#### navigatorRef
+Callback that is called on navigator initialization with `navigator` reference so you can manage your navigator from the outside.
 
-| Property | Available values                                                                                      |
-| -------- | ----------------------------------------------------------------------------------------------------- |
-| type     | 'none', 'bottom','left', 'left-bottom', 'left-top' 'right', 'right-bottom', 'right-top' 'top', 'fade' |
-| duration | integer number in milliseconds                                                                        |
-| easing   | easing type from here (https://github.com/oblador/react-native-animatable)                            |
-
-When you set animation type to `none` no animation is shown
-
-```javascript
-// Example
-
-router.pop({ type: 'bottom', duration: 500, easing: 'ease-in-out' })
+_Example_:
+```js
+<Navigator navigatorRef={ref => (this.navigator = ref)}/>
 ```
 
-#### Custom animations
+#### animations
+Custom animations that you can use for transitions. Because navigator uses native transitions you can use only 'transform' animations. You can use this animation with any `navigator` method.
 
-Also you can pass your custom animation types to router. Where type is array consisting of:
+_Example_:
+```js
+import { Dimensions } from 'react-native'
+const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
+<Navigator animations={{
+  bottomRight: {
+      start: { transform: [{ translateX: windowWidth }, { translateY: windowHeight }] },
+      end: { transform: [{ translateX: 0 }, { translateY: 0 }] }
+  }
+}}/>
+```
+
+### Navigator methods
+Navigator passes `navigator` object to every screen. With this object you can manage your screens. Also you can get this object with `navigatorRef`.
+
+#### push(screen, props, transitionProps)
+Pushes new screen to the stack. Returns `Promise` that is resolved after transition finishes.
+
+_Example_:
+```js
+  // Stack before: First
+  navigator.push('Second', {email: 'john@gmail.com'}, {animation: 'bottom'})
+  // Stack after: First, Second
+```
+
+#### pop(transitionProps)
+Pops last screen from the stack. If `transitionProps` are not provided uses those transitionProps that this screen was pushed with. Returns `Promise` that is resolved after transition finishes.
+
+_Example_:
+```js
+  // Stack before: First, Second
+  navigator.pop({animation: 'left'})
+  // Stack after: First
+```
+
+#### reset(screen, props, transitionProps)
+Resets the whole stack to a new screen. Returns `Promise` that is resolved after transition finishes.
+
+_Example_:
+```js
+  // Stack before: First, Second
+  navigator.reset('Third', {name: 'John'}, {animation: 'fade'})
+  // Stack after: Third
+```
+
+#### stack
+Returns the stack
+
+_Example_:
+```js
+  // Stack before: First, Second
+  console.log(navigator.stack) // [{id: 'some-id', screen: 'First', props: {name: 'John'}, transitionProps: {animation: 'left', duration: 500, easing: 'ease-in-out'}}]
+```
+
+#### popTo(screenId, transitionProps)
+Pops all screens after the certain screen. If `transitionProps` are not provided uses those transitionProps that this screen was pushed with. Returns `Promise` that is resolved after transition finishes.
+
+_Example_:
+```js
+  // Stack before: First, Second, Third, Fourth
+  navigator.popTo(navigator.stack[1].id)
+  // Stack after: First, Second
+```
+
+#### resetFrom(screenId, screen, props, transitionProps)
+Resets the stack after the certain screen. Returns `Promise` that is resolved after transition finishes.
+
+<<<<<<< HEAD
 | Index | Type    | Description                                                      |
 | ----- | ------- | ---------------------------------------------------------------- |
 | 0     | Object  | Start position for in animation / end position for out animation |
@@ -148,52 +188,45 @@ Also you can pass your custom animation types to router. Where type is array con
 | 2     | Boolean | Usage of native driver animation                                 |
 | 3     | Object  | (optional) End position for out animation of previous screen     |
 | 4     | Object  | (optional) End position for in animation of previous screen      |
+=======
+_Example_:
+```js
+  // Stack before: First, Second, Third, Fourth
+  navigator.resetFrom(navigator.stack[1].id, 'Fifth', {age: 18})
+  // Stack after: First, Second, Fifth
+```
+>>>>>>> v3
 
-```javascript
-// Example
+#### register/unregisterBackHandler
 
-const animations = { 'skew' : [{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }] }, false] }
-<Router animations={animations} routes={First, Second} initialRoute="First"/>
+If you want to handle Android hardware back press and IOS swipe back on the certain screen you can use this methods. If you return `false` from callback function on Android app will be minimized.
 
-// then
-router.push.Second({}, { type: 'skew' })
+_Example_:
+```js
+  componentDidMount = () => {
+      this.props.navigator.registerBackHandler(this.onBack)
+  }
+
+  componentWillUnmount = () => {
+      this.props.navigator.unregisterBackHandler()
+  }
+
+  onBack = navigator => navigator.pop()
 ```
 
-The only limitation for custom animations is that the out animation `useNativeDriver` property can't be different from the in animation `useNativeDriver` property
+### Transition props
 
-```javascript
-// You can't push screen with animation like this
-[{ transform: [{ skewX: '90deg' }] }, { transform: [{ skewX: '0deg' }]}, false]
-// and then pop with animation like that
-[{ opacity: 1}] }, { opacity:0}, true]
-```
+#### animation
+_Default value_: `'right'`
 
-#### Responding to stack changes
+One of default animations: `right`, `left`, `top`, `bottom`, `none`, `fade`. Or one of custom animations provided to navigator by `animations` property.
 
-The `onStackChange` event can be used to update your application state or UI when navigation occurs. It receives a single argument, the new stack
+#### duration
+_Default value_: `250`
 
-```javascript
-// Example
+Duration of transition in milliseconds. Not applied to `none` animation.
 
-<Router
-  onStackChange={newStack => {
-    // Dispatch the new navigation stack to a store
-    dispatch({type: 'SET_ROUTER_STACK', payload: newStack})
-  }}
-/>
-```
+#### easing
+_Default value_: `'ease-in-out'`
 
-The `onBeforeStackChange` event can be used to synchronise your application UI with router transitions. It receives 3 arguments: the transition animation, the current stack and the target stack
-
-```javascript
-// Example
-
-<Router
-  onBeforeStackChange={(animation, oldStack, newStack) => {
-    // Assign the transition animation and screens to state
-    const fromScreen = fromStack[fromStack.length - 1].route
-    const toScreen = toStack[toStack.length - 1].route
-    this.setState({animation, fromScreen, toScreen})
-  }}
-/>
-```
+One of easings from [this table](https://github.com/oblador/react-native-animatable#properties). Not applied to `none` animation.

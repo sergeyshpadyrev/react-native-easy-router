@@ -1,25 +1,27 @@
 {
-  "name": "react-native-easy-router",
-  "version": "2.8.0",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
-  "dependencies": {
-    "react-native-animatable-promise": "^1.2.4",
-    "react-native-swipe-gestures": "thegamenicorus/react-native-swipe-gestures.git"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sergeyshpadyrev/react-native-easy-router.git"
-  },
-  "keywords": [
-    "react",
-    "react-native",
-    "router"
-  ],
-  "author": "Sergey Shpadyrev",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/sergeyshpadyrev/react-native-easy-router/issues"
-  },
-  "homepage": "https://github.com/sergeyshpadyrev/react-native-easy-router#readme"
+    "name": "react-native-easy-router",
+    "version": "3.0.0",
+    "main": "src/index.js",
+    "dependencies": {
+        "react-native-animatable-promise": "^1.2.4",
+        "uuid": "^3.3.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sergeyshpadyrev/react-native-easy-router.git"
+    },
+    "keywords": [
+        "react",
+        "react-native",
+        "router",
+        "navigator",
+        "navigation",
+        "screens"
+    ],
+    "author": "Sergey Shpadyrev",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/sergeyshpadyrev/react-native-easy-router/issues"
+    },
+    "homepage": "https://github.com/sergeyshpadyrev/react-native-easy-router#readme"
 }

@@ -1,125 +1,218 @@
-import Actions from "./actions";
-import Animator from "./animation";
-import Hardware from "./hardware";
-import GestureRecognizer from "react-native-swipe-gestures";
-import Methods from "./methods";
-import { Platform, View } from "react-native";
-import React from "react";
-import Screen from "./screen";
-import ScreenMethods from "./screenMethods";
-import styles from "./styles";
+import { BackHandler } from 'react-native'
+import { createInitialStack, createScreen, screenStyle } from './screen'
+import createRunTransition from './transition'
+import React from 'react'
+import SwipeRecognizer from './swipe'
+import { View } from 'react-native-animatable-promise'
 
-let counter = 0;
+class NavigatorScreen extends React.Component {
+    shouldComponentUpdate = () => {
+        return false
+    }
 
-class Router extends React.Component {
-  actions = new Actions();
-  animator = new Animator(this.props.animations);
-  state = { stack: [] };
-
-  methods = new Methods(this);
-  hardware = new Hardware(this.methods, this.props.disableHardwareBack);
-
-  addScreen = (
-    route,
-    params,
-    animation,
-    onActionFinished,
-    idShift = 0,
-    nextStack = undefined
-  ) => {
-    const index = this.state.stack.length - idShift;
-    const id = `${index}-${route}-${counter}`;
-    counter += 1;
-    const Route = this.props.routes[route];
-    const screenReferenceHandler = screen => {
-      if (!screen) return;
-
-      const methods = new ScreenMethods(this, screen, index);
-      const previous = this.state.stack.slice(0, -1);
-      const last = this.state.stack[this.state.stack.length - 1];
-      const stack = [
-        ...previous,
-        { ...last, methods: { ...methods, id, route, params }, screen }
-      ];
-
-      this.setTransition(
-        screen.props.animation,
-        this.state.stack,
-        nextStack ? nextStack(stack) : stack
-      );
-      screen
-        .animateIn(stack)
-        .then(() =>
-          nextStack
-            ? onActionFinished(stack)
-            : this.setStack({ stack }, onActionFinished)
-        );
-    };
-    const screen = (
-      <Screen
-        animation={animation}
-        animator={this.animator}
-        key={id}
-        ref={screenReferenceHandler}
-      >
-        <Route router={this.methods} {...params} />
-      </Screen>
-    );
-    this.setStack({ stack: [...this.state.stack, screen] }, undefined, true);
-  };
-
-  componentDidMount = () => {
-    this._isMounted = true;
-    this.addScreen(this.props.initialRoute, {}, { type: "none" });
-    this.hardware.subscribe();
-
-    if (this.props.router) this.props.router(this.methods);
-  };
-
-  componentWillUnmount = () => {
-    this.hardware.unsubscribe();
-    this._isMounted = false;
-  };
-
-  setStack = ({ stack }, onFinish, skipProps) => {
-    if (!this._isMounted) return;
-    this.setState({ stack }, onFinish);
-    if (!!skipProps || !this.props.onStackChange) return;
-    this.props.onStackChange(stack.map(route => route.methods));
-  };
-
-  setTransition = (animation, from, to) => {
-    if (!this.props.onBeforeStackChange) return;
-    this.props.onBeforeStackChange(
-      animation,
-      from.map(route => route.methods).filter(route => route),
-      to.map(route => route.methods)
-    );
-  };
-
-  render = () => (
-    <GestureRecognizer
-      onSwipeRight={() => {
-        if (!this.props.disableHardwareBack && Platform.OS === "ios")
-          this.methods.pop();
-      }}
-      config={{
-        velocityThreshold: 2,
-        directionalOffsetThreshold: 80,
-        detectSwipeUp: false,
-        detectSwipeDown: false,
-        detectSwipeLeft: false
-      }}
-      style={{ flex: 1 }}
-    >
-      <View
-        pointerEvents="box-none"
-        style={{ ...this.props.style, ...styles.router }}
-      >
-        {this.state.stack}
-      </View>
-    </GestureRecognizer>
-  );
+    render = () => {
+        const { navigator, passedProps, screen: Screen } = this.props
+        return <Screen navigator={navigator} {...passedProps} />
+    }
 }
 
-export default Router;
+class Navigator extends React.Component {
+    state = { stack: createInitialStack(this.props.initialStack, this.props.screens) }
+    renderedScreens = {}
+    runTransition = createRunTransition(this.props.animations)
+    inTransition = false
+    backHandlers = {}
+
+    updateStack = stack => {
+        const { stack: previousStack } = this.state
+        return new Promise(resolve =>
+            this.setState({ stack }, () => {
+                const { onStackUpdate } = this.props
+                if (onStackUpdate) onStackUpdate(stack, previousStack)
+                resolve()
+            })
+        )
+    }
+
+    navigatorAction = action =>
+        new Promise((resolve, reject) => {
+            if (this.inTransition) {
+                const inTransitionError =
+                    "Can't process action when navigator is in transition state"
+                return reject(inTransitionError)
+            }
+
+            this.inTransition = true
+            action(
+                () => {
+                    this.inTransition = false
+                    resolve()
+                },
+                error => {
+                    this.inTransition = false
+                    reject(error)
+                }
+            )
+        })
+    navigator = {
+        pop: transitionProps => {
+            if (this.state.stack.length === 1) return
+
+            return this.navigatorAction(async onFinish => {
+                const screen = this.state.stack[this.state.stack.length - 1]
+                await this.runTransition(
+                    this.renderedScreens[screen.id],
+                    !!transitionProps
+                        ? { ...screen.transitionProps, ...transitionProps }
+                        : screen.transitionProps,
+                    true
+                )
+                await this.updateStack(this.state.stack.slice(0, -1))
+                onFinish()
+            })
+        },
+        popTo: (screenId, transitionProps) => {
+            const screenIndex = this.state.stack.findIndex(({ id }) => id === screenId)
+            if (screenIndex < 0) throw new Error(`No screen with id "${screenId}" found`)
+            if (screenIndex === this.state.stack.length - 1)
+                throw new Error(`Can't pop to current screen`)
+
+            return this.navigatorAction(async (onFinish, onFail) => {
+                if (this.state.stack.length === 1)
+                    return onFail("Can't pop if there's only one screen in the stack")
+
+                const screen = this.state.stack[this.state.stack.length - 1]
+                await this.runTransition(
+                    this.renderedScreens[screen.id],
+                    !!transitionProps
+                        ? { ...screen.transitionProps, ...transitionProps }
+                        : screen.transitionProps,
+                    true
+                )
+                await this.updateStack(this.state.stack.slice(0, screenIndex + 1))
+                onFinish()
+            })
+        },
+        push: (screenName, props, transitionProps) => {
+            if (!this.props.screens.hasOwnProperty(screenName))
+                throw new Error(`Screen ${screenName} doesn't exist`)
+
+            return this.navigatorAction(async onFinish => {
+                const screen = createScreen({ screen: screenName, props, transitionProps })
+                await this.updateStack([...this.state.stack, screen])
+                await this.runTransition(
+                    this.renderedScreens[screen.id],
+                    screen.transitionProps,
+                    false
+                )
+                onFinish()
+            })
+        },
+        reset: (screenName, props, transitionProps) => {
+            if (!this.props.screens.hasOwnProperty(screenName))
+                throw new Error(`Screen ${screenName} doesn't exist`)
+
+            return this.navigatorAction(async onFinish => {
+                const screen = createScreen({ screen: screenName, props, transitionProps })
+                await this.updateStack([...this.state.stack, screen])
+                await this.runTransition(
+                    this.renderedScreens[screen.id],
+                    screen.transitionProps,
+                    false
+                )
+                await this.updateStack([screen])
+                onFinish()
+            })
+        },
+        resetFrom: (screenId, screenName, props, transitionProps) => {
+            if (!this.props.screens.hasOwnProperty(screenName))
+                throw new Error(`Screen ${screenName} doesn't exist`)
+            const screenIndex = this.state.stack.findIndex(({ id }) => id === screenId)
+            if (screenIndex < 0) throw new Error(`No screen with id "${screenId}" found`)
+
+            return this.navigatorAction(async onFinish => {
+                const screen = createScreen({ screen: screenName, props, transitionProps })
+                await this.updateStack([...this.state.stack, screen])
+                await this.runTransition(
+                    this.renderedScreens[screen.id],
+                    screen.transitionProps,
+                    false
+                )
+
+                await this.updateStack([...this.state.stack.slice(0, screenIndex + 1), screen])
+                onFinish()
+            })
+        }
+    }
+
+    onBackPress = () => {
+        const { stack } = this.state
+        const lastStackItemId = stack[stack.length - 1].id
+        if (this.backHandlers.hasOwnProperty(lastStackItemId)) {
+            return this.backHandlers[lastStackItemId](this.navigator) || stack.length > 1
+        }
+
+        const { backHandler } = this.props
+        if (backHandler) {
+            return backHandler(this.navigator) || stack.length > 1
+        }
+
+        return stack.length > 1
+    }
+
+    componentWillMount = () => {
+        this.androidBackHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.onBackPress
+        )
+
+        const { navigatorRef } = this.props
+        if (!!navigatorRef) navigatorRef(this.navigator)
+    }
+
+    componentWillUnmount = () => {
+        this.androidBackHandler.remove()
+
+        const { navigatorRef } = this.props
+        if (!!navigatorRef) navigatorRef(undefined)
+    }
+
+    renderScreen = (stackItem, index) => {
+        const { screens } = this.props
+        const { stack } = this.state
+        const Screen = screens[stackItem.screen]
+        const screenDependentMethods = {
+            registerBackHandler: handler => (this.backHandlers[stackItem.id] = handler),
+            unregisterBackHandler: () => delete this.backHandlers[stackItem.id]
+        }
+        const screenNavigator = { ...this.navigator, ...screenDependentMethods }
+        Object.defineProperty(screenNavigator, 'stack', { get: () => this.state.stack })
+
+        return (
+            <View
+                key={stackItem.id}
+                pointerEvents={index < stack.length - 1 ? 'none' : undefined}
+                style={[screenStyle, { opacity: index < stack.length - 2 ? 0 : 1 }]}
+                ref={ref => (this.renderedScreens[stackItem.id] = ref)}
+                useNativeDriver={true}>
+                <NavigatorScreen
+                    navigator={screenNavigator}
+                    passedProps={stackItem.props}
+                    screen={Screen}
+                />
+            </View>
+        )
+    }
+
+    render = () => (
+        <SwipeRecognizer onSwipeBack={this.onBackPress}>
+            {this.state.stack.map(this.renderScreen)}
+        </SwipeRecognizer>
+    )
+}
+
+Navigator.defaultProps = {
+    backHandler: navigator => navigator.pop()
+}
+
+export default Navigator
