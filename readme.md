@@ -15,7 +15,7 @@ npm install --save react-native-easy-router
 
 ## Usage
 
-```
+```js
 import { AppRegistry, Text, View } from 'react-native'
 import { name } from './app.json'
 import React from 'react'
