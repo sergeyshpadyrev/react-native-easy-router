@@ -43,7 +43,7 @@ const Application = () => <Navigator screens={{ First, Second }} initialStack='F
 AppRegistry.registerComponent(name, () => Application)
 
 ```
-You can look at [example](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/v3/example) for better understanding
+You can look at [example](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/master/example) for better understanding
 
 ## Documentation
 
