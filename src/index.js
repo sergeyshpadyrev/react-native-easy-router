@@ -166,6 +166,8 @@ class Navigator extends React.Component {
             this.onBackPress
         )
 
+        Object.defineProperty(this.navigator, 'stack', { get: () => this.state.stack })
+
         const { navigatorRef } = this.props
         if (!!navigatorRef) navigatorRef(this.navigator)
     }
@@ -186,7 +188,6 @@ class Navigator extends React.Component {
             unregisterBackHandler: () => delete this.backHandlers[stackItem.id]
         }
         const screenNavigator = { ...this.navigator, ...screenDependentMethods }
-        Object.defineProperty(screenNavigator, 'stack', { get: () => this.state.stack })
 
         return (
             <View
