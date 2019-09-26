@@ -188,6 +188,7 @@ class Navigator extends React.Component {
             unregisterBackHandler: () => delete this.backHandlers[stackItem.id]
         }
         const screenNavigator = { ...this.navigator, ...screenDependentMethods }
+        Object.defineProperty(screenNavigator, 'stack', { get: () => this.state.stack })
 
         return (
             <View
