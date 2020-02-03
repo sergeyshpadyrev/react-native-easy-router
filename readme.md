@@ -7,6 +7,8 @@ React Native Easy Router is an easy-to-use and performant screen navigation libr
 
 **WARNING**: _Versions 2.x.x of this library is already not supported but you can find docs and examples [here](https://github.com/sergeyshpadyrev/react-native-easy-router/tree/v2)_
 
+**If this project has helped you out, please support us with a star** 🌟
+
 ## Installation
 
 ```
