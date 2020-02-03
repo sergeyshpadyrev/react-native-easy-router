@@ -146,6 +146,8 @@ class Navigator extends React.Component {
     }
 
     onBackPress = () => {
+        if (this.inTransition) return
+
         const { stack } = this.state
         const lastStackItemId = stack[stack.length - 1].id
         if (this.backHandlers.hasOwnProperty(lastStackItemId)) {
