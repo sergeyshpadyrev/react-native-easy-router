@@ -3,7 +3,7 @@ import { createInitialStack, createScreen, screenStyle } from './screen'
 import createRunTransition from './transition'
 import React from 'react'
 import SwipeRecognizer from './swipe'
-import { View } from 'react-native-animatable-promise'
+import { View } from 'react-native-animatable'
 
 class NavigatorScreen extends React.Component {
     shouldComponentUpdate = () => {
@@ -162,7 +162,7 @@ class Navigator extends React.Component {
         return stack.length > 1
     }
 
-    componentWillMount = () => {
+    UNSAFE_componentWillMount = () => {
         this.androidBackHandler = BackHandler.addEventListener(
             'hardwareBackPress',
             this.onBackPress

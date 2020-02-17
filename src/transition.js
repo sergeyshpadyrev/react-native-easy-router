@@ -35,6 +35,9 @@ export default customAnimations => {
         const duration = transitionProps.duration
         const easing = transitionProps.easing
 
-        return screen.transition(from, to, duration, easing)
+        return new Promise(resolve => {
+            screen.transition(from, to, duration, easing)
+            setTimeout(resolve, duration)
+        })
     }
 }
