@@ -11,6 +11,10 @@ React Native Easy Router is an easy-to-use and performant screen navigation libr
 
 ```
 npm install --save react-native-easy-router
+
+## or 
+
+yarn add react-native-easy-router
 ```
 
 ## Usage
