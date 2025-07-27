@@ -3,9 +3,9 @@
 [![npm version](https://img.shields.io/npm/v/react-native-easy-router)](https://badge.fury.io/js/react-native-easy-router)
 [![License: MIT](https://img.shields.io/npm/l/react-native-easy-router)](https://opensource.org/licenses/MIT)
 
-React Native Easy Router is an easy-to-use and performant screen navigation library for React Native
+**This project is deprecated. Please don't use it**
 
-**If this project has helped you out, please support us with a star** 🌟
+React Native Easy Router is an easy-to-use and performant screen navigation library for React Native
 
 ## Installation
 
